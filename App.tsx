@@ -4,9 +4,10 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import StudentList from './componnents/StudentsList'
-import StudentDetails from './componnents/UserDetails'
-import StudentAdd from './componnents/UserAdd'
+// import StudentList from './componnents/StudentsList'
+// import StudentDetails from './componnents/UserDetails'
+// import StudentAdd from './componnents/UserAdd'
+import LoginScreen from './screens/LoginSceen';
 
 const InfoScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
   return (
@@ -16,32 +17,44 @@ const InfoScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) 
   );
 }
 
-
-
-const StudentStack = createNativeStackNavigator();
-const StudentStackCp: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
-  const addNewStudents = () => {
-    navigation.navigate('StudentAdd')
-  }
-  return (
-    <StudentStack.Navigator>
-      <StudentStack.Screen name="StudentList" component={StudentList} options={{
-        headerRight: () => (
-          <TouchableOpacity
-            onPress={addNewStudents}>
-            <Ionicons name={'add-outline'} size={40} color={'gray'} />
-          </TouchableOpacity>
-        ),
-      }
-      } />
-      <StudentStack.Screen name="StudentDetails" component={StudentDetails} />
-      <StudentStack.Screen name="StudentAdd" component={StudentAdd} />
-    </StudentStack.Navigator>
-  );
-}
+// const Stack = createNativeStackNavigator()
+// const StudentStackCp: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
+//   const addNewStudents = () => {
+//     navigation.navigate('StudentAdd')
+//   }
+//   return (
+//     <StudentStack.Navigator>
+//       <StudentStack.Screen name="StudentList" component={StudentList} options={{
+//         headerRight: () => (
+//           <TouchableOpacity
+//             onPress={addNewStudents}>
+//             <Ionicons name={'add-outline'} size={40} color={'gray'} />
+//           </TouchableOpacity>
+//         ),
+//       }
+//       } />
+//       <StudentStack.Screen name="StudentDetails" component={StudentDetails} />
+//       <StudentStack.Screen name="StudentAdd" component={StudentAdd} />
+//     </StudentStack.Navigator>
+//   );
+// }
 
 const Tab = createBottomTabNavigator();
+
 const App: FC = () => {
+  const Stack = createNativeStackNavigator()
+  const [token, setToken] = useState()
+
+  if (!token) {
+    return (
+      <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen name="LoginScreen" component={LoginScreen} />
+        </Stack.Navigator>
+
+      </NavigationContainer>
+    )
+  }
   return (
     <NavigationContainer>
       <Tab.Navigator screenOptions={({ route }) => ({
@@ -61,8 +74,10 @@ const App: FC = () => {
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',
       })}>
-        <Tab.Screen name="StudentStackCp" component={StudentStackCp} options={{ headerShown: false }} />
-        <Tab.Screen name="InfoScreen" component={InfoScreen} />
+        <Tab.Screen name="My profile" component={InfoScreen} />
+        <Tab.Screen name="My post" component={InfoScreen} />
+        <Tab.Screen name="Home" component={InfoScreen} />
+        <Tab.Screen name="Chat" component={InfoScreen} />
       </Tab.Navigator>
 
     </NavigationContainer>

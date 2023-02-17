@@ -2,16 +2,15 @@ import { useState, FC, useEffect } from 'react';
 import { StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-import StudentModel, { Student } from '../model/UserModel';
-import * as ImagePicker from 'expo-image-picker';
+import PostModel, { Post } from '../model/PostModel'
+import * as ImagePicker from 'expo-image-picker'
 
-
-const StudentAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
+const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
     console.log("My app is running")
-    const [id, setId] = useState("")
-    const [name, setName] = useState("")
+    // const [userName, setName] = useState("")
+    // const [name, setName] = useState("")
     const [address, setAddress] = useState("")
-    const [avatarUri, setAvatarUri] = useState("")
+    const [imageUri, setImageUri] = useState("")
 
     const askPermission = async () => {
         try {
@@ -32,7 +31,7 @@ const StudentAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) 
             const res = await ImagePicker.launchCameraAsync()
             if (!res.canceled && res.assets.length > 0) {
                 const uri = res.assets[0].uri
-                setAvatarUri(uri)
+                setImageUri(uri)
             }
 
         } catch (err) {
@@ -42,11 +41,11 @@ const StudentAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) 
 
     const openGallery = async () => {
         try {
-            const res = await ImagePicker.launchImageLibraryAsync()
-            if (!res.canceled && res.assets.length > 0) {
-                const uri = res.assets[0].uri
-                setAvatarUri(uri)
-            }
+            // const res = await ImagePicker.launchImageLibraryAsync()
+            // if (!res.canceled && res.assets.length > 0) {
+            //     const uri = res.assets[0].uri
+            //     setAvatarUri(uri)
+            // }
 
         } catch (err) {
             console.log("open camera error:" + err)
@@ -55,22 +54,22 @@ const StudentAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) 
 
     const onSaveCallback = async () => {
         console.log("save button was pressed")
-        const student: Student = {
-            id: id,
-            name: name,
-            image: "url",
+        const post: Post = {
+            sender: "sender", //-------------------------------------fix--------------------------
+            message: "message",
+            imageUrl: "url",
         }
         try {
-            if (avatarUri != "") {
+            if (imageUri != "") {
                 console.log("uploading image")
-                const url = await StudentModel.uploadImage(avatarUri)
-                student.image = url
+                const url = await PostModel.uploadImage(imageUri)
+                post.imageUrl = url
                 console.log("got url from upload: " + url)
             }
-            console.log("saving stundet")
-            await StudentModel.addStudent(student)
+            console.log("saving user")
+            await PostModel.addPost(post)
         } catch (err) {
-            console.log("fail adding studnet: " + err)
+            console.log("fail adding user: " + err)
         }
         navigation.goBack()
     }
@@ -82,8 +81,8 @@ const StudentAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) 
         <ScrollView>
             <View style={styles.container}>
                 <View>
-                    {avatarUri == "" && <Image source={require('../assets/ava.png')} style={styles.avatar}></Image>}
-                    {avatarUri != "" && <Image source={{ uri: avatarUri }} style={styles.avatar}></Image>}
+                    {/* {avatarUri == "" && <Image source={require('../assets/ava.png')} style={styles.avatar}></Image>}
+                    {avatarUri != "" && <Image source={{ uri: avatarUri }} style={styles.avatar}></Image>} */}
 
                     <TouchableOpacity onPress={openCamera} >
                         <Ionicons name={'camera'} style={styles.cameraButton} size={50} />
@@ -93,18 +92,18 @@ const StudentAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) 
                     </TouchableOpacity>
                 </View>
 
-                <TextInput
+                {/* <TextInput
                     style={styles.input}
                     onChangeText={setId}
                     value={id}
                     placeholder={'Student ID'}
-                />
-                <TextInput
+                /> */}
+                {/* <TextInput
                     style={styles.input}
                     onChangeText={setName}
                     value={name}
                     placeholder={'Student Name'}
-                />
+                /> */}
                 <TextInput
                     style={styles.input}
                     onChangeText={setAddress}
@@ -172,4 +171,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default StudentAdd
+export default PostAdd
