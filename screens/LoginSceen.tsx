@@ -31,8 +31,14 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
                 value={password}
                 placeholder={'Password'}
             />
-            <Ionicons name={"logo-facebook"} size={50} style={styles.icon} />
-            <Ionicons name={"logo-google"} size={50} style={styles.icon} />
+            <View style={styles.icon}>
+                <TouchableOpacity onPress={onLoginCallback}>
+                    <Ionicons name={"logo-facebook"} size={50} color="blue" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={onLoginCallback}>
+                    <Ionicons name={"logo-google"} size={50} color="gray" />
+                </TouchableOpacity>
+            </View>
 
             <TouchableOpacity onPress={onLoginCallback} style={styles.button}>
                 <Text style={styles.buttonText}>Login</Text>
@@ -88,7 +94,7 @@ const styles = StyleSheet.create({
         height: 50,
         margin: 12,
         padding: 12,
-        backgroundColor: 'pink',
+        backgroundColor: 'salmon',
         borderRadius: 10,
     },
     imageButton: {
