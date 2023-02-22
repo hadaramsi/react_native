@@ -7,6 +7,8 @@ export type Login = {
 export type Register = {
     userName: String,
     password: String,
+    fullName: String,
+    image: String
 }
 
 const loginUser = async (login: Login) => {
@@ -28,7 +30,9 @@ const RegisterUser = async (register: Register) => {
     console.log("register user")
     const data = {
         message: register.userName,
-        sender: register.password
+        sender: register.password,
+        fullName: register.fullName,
+        image: register.image
     }
     try {
         const res: any = await AuthApi.register(data)

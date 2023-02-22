@@ -10,7 +10,7 @@ import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { AntDesign } from '@expo/vector-icons'
 
-const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
+const RegisterScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
     const [userName, setUserName] = useState("")
     const [password, setPassword] = useState("")
     const onLoginCallback = () => {
@@ -18,7 +18,7 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
     }
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text style={styles.text}>Welcome!</Text>
+            <Text style={styles.text}>We happy you want to join us</Text>
             <TextInput
                 style={styles.input}
                 onChangeText={setUserName}
@@ -31,14 +31,24 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
                 value={password}
                 placeholder={'Password'}
             />
+            <View style={styles.icon}>
+                <TouchableOpacity onPress={onLoginCallback}>
+                    <Ionicons name={"logo-facebook"} size={50} color="blue" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={onLoginCallback}>
+                    <Ionicons name={"logo-google"} size={50} color="gray" />
+                </TouchableOpacity>
+            </View>
+
             <TouchableOpacity onPress={onLoginCallback} style={styles.button}>
-                <Text style={styles.buttonText}>Login</Text>
+                <Text style={styles.buttonText}>Register</Text>
             </TouchableOpacity>
 
 
         </View>
     );
 }
+
 
 const styles = StyleSheet.create({
     text: {
@@ -107,4 +117,4 @@ const styles = StyleSheet.create({
         flexDirection: "row",
     },
 });
-export default LoginScreen
+export default RegisterScreen
