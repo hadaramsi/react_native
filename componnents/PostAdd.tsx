@@ -65,10 +65,10 @@ const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
                 post.imageUrl = url
                 console.log("got url from upload: " + url)
             }
-            console.log("saving user")
+            console.log("saving post")
             await PostModel.addPost(post)
         } catch (err) {
-            console.log("fail adding user: " + err)
+            console.log("fail adding post: " + err)
         }
         navigation.goBack()
     }

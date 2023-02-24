@@ -5,55 +5,132 @@ import {
     TextInput,
     StyleSheet,
     TouchableOpacity,
+    Image,
+    ScrollView
 } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { AntDesign } from '@expo/vector-icons'
+import AuthModel, { Register } from '../model/AuthModel'
+import * as ImagePicker from 'expo-image-picker'
 
 const RegisterScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
-    const [userName, setUserName] = useState("")
+    const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const onLoginCallback = () => {
+    const [fullName, setFullName] = useState("")
+    const [imageUrl, setImageUrl] = useState("")
+    // const [avatarUri, setAvatarImage] = useState("")
+    const onRegisterCallback = async () => {
+        const register = {
+            email: email,
+            password: password,
+            fullName: fullName,
+            imageUrl: imageUrl
+        }
+        try {
+            if (email != "" && password != "" && fullName != "") {
+                if (imageUrl != "") {
+                    console.log("uploading image")
+                    const url = await AuthModel.uploadImage(imageUrl)
+                    register.imageUrl = url
+                    console.log("got url from upload: " + url)
+                }
+                await AuthModel.RegisterUser(register)
+            }
+        } catch (err) {
+            console.log("fail register user: " + err)
+        }
         navigation.goBack()
     }
+
+    const openCamera = async () => {
+        try {
+            const res = await ImagePicker.launchCameraAsync()
+            if (!res.canceled && res.assets.length > 0) {
+                const url = res.assets[0].uri
+                setImageUrl(url)
+            }
+
+        } catch (err) {
+            console.log("open camera error:" + err)
+        }
+    }
+
+    const openGallery = async () => {
+        try {
+            const res = await ImagePicker.launchImageLibraryAsync()
+            if (!res.canceled && res.assets.length > 0) {
+                const url = res.assets[0].uri
+                setImageUrl(url)
+            }
+
+        } catch (err) {
+            console.log("open camera error:" + err)
+        }
+    }
+
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-            <Text style={styles.text}>We happy you want to join us</Text>
-            <TextInput
-                style={styles.input}
-                onChangeText={setUserName}
-                value={userName}
-                placeholder={'User Name'}
-            />
-            <TextInput
-                style={styles.input}
-                onChangeText={setPassword}
-                value={password}
-                placeholder={'Password'}
-            />
-            <View style={styles.icon}>
-                <TouchableOpacity onPress={onLoginCallback}>
-                    <Ionicons name={"logo-facebook"} size={50} color="blue" />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={onLoginCallback}>
-                    <Ionicons name={"logo-google"} size={50} color="gray" />
+        <ScrollView>
+            <View style={styles.container}>
+                <Text style={styles.text}>We are happy that you</Text>
+                <Text style={styles.text}>want to join us</Text>
+                <TextInput
+                    style={styles.input}
+                    onChangeText={setEmail}
+                    value={email}
+                    placeholder={'Email'}
+                />
+                <TextInput
+                    style={styles.input}
+                    onChangeText={setPassword}
+                    value={password}
+                    placeholder={'Password'}
+                />
+                <TextInput
+                    style={styles.input}
+                    onChangeText={setFullName}
+                    value={fullName}
+                    placeholder={'Full name'}
+                />
+                {/* <Text style={styles.textSade}>Uplude image</Text> */}
+                {imageUrl == "" && < Image source={require('../assets/avatar.png')} style={styles.avatar}></Image>}
+                {imageUrl != "" && <Image source={{ uri: imageUrl }} style={styles.avatar}></Image>}
+                <View>
+                    <TouchableOpacity onPress={openCamera} >
+                        <Ionicons name={'camera'} style={styles.cameraButton} size={50} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={openGallery} >
+                        <Ionicons name={'image'} style={styles.galleryButton} size={50} />
+                    </TouchableOpacity>
+                </View>
+                <Text style={styles.textSade}>Register with:</Text>
+                <View style={styles.icon}>
+                    <TouchableOpacity onPress={onRegisterCallback}>
+                        <Ionicons name={"logo-facebook"} size={50} color="blue" />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={onRegisterCallback}>
+                        <Ionicons name={"logo-google"} size={50} color="gray" />
+                    </TouchableOpacity>
+                </View>
+
+                <TouchableOpacity onPress={onRegisterCallback} style={styles.button}>
+                    <Text style={styles.buttonText}>Register</Text>
                 </TouchableOpacity>
             </View>
-
-            <TouchableOpacity onPress={onLoginCallback} style={styles.button}>
-                <Text style={styles.buttonText}>Register</Text>
-            </TouchableOpacity>
-
-
-        </View>
-    );
+        </ScrollView >
+    )
 }
-
 
 const styles = StyleSheet.create({
     text: {
-        margin: 5,
-        fontSize: 50,
+        margin: 2,
+        fontSize: 30,
+        alignSelf: 'center',
+    },
+    textSade: {
+        margin: 2,
+        fontSize: 20,
+        alignSelf: 'center',
     },
     container: {
         flex: 1,
@@ -79,23 +156,26 @@ const styles = StyleSheet.create({
         height: 50,
     },
     input: {
-        height: 50,
-        width: 350,
-        margin: 12,
+        height: 40,
+        width: 300,
+        margin: 5,
         borderWidth: 1,
-        padding: 10,
+        padding: 5,
         borderRadius: 5,
+        alignSelf: 'center',
     },
     buttonesContainer: {
         flexDirection: 'row',
+        alignSelf: 'center',
     },
     button: {
-        width: 200,
+        width: 120,
         height: 50,
-        margin: 12,
-        padding: 12,
+        margin: 8,
+        padding: 8,
         backgroundColor: 'salmon',
         borderRadius: 10,
+        alignSelf: 'center',
     },
     imageButton: {
         width: 200,
@@ -115,6 +195,7 @@ const styles = StyleSheet.create({
         // flex: 1,
         // backgroundColor: 'grey',
         flexDirection: "row",
+        alignSelf: 'center',
     },
 });
 export default RegisterScreen

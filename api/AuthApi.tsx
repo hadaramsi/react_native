@@ -5,11 +5,16 @@ const login = async (loginJson: any) => {
 }
 
 const register = async (registerJson: any) => {
+    console.log("help meeeee")
+
     return apiClient.post("/auth/register", registerJson)
 }
 
 const refresh = async () => {
     return apiClient.get("/auth/refresh")
 }
+const uploadImage = async (image: any) => {
+    return apiClient.post("/file/file", image)
+}
 
-export default { login, register, refresh }
+export default { login, register, refresh, uploadImage }

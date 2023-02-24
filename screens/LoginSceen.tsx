@@ -9,21 +9,37 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { AntDesign } from '@expo/vector-icons'
+import AuthModel, { Login } from '../model/AuthModel'
+
 
 const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
-    const [userName, setUserName] = useState("")
+    const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
-    const onLoginCallback = () => {
+    const onLoginCallback = async () => {
+        const login = {
+            email: email,
+            password: password,
+        }
+        try {
+            if (email != "" && password != "") {
+                await AuthModel.loginUser(login)
+            }
+        } catch (err) {
+            console.log("fail adding user: " + err)
+        }
         navigation.goBack()
+    }
+    const onRegisterCallback = () => {
+        navigation.navigate("RegisterScreen")
     }
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Text style={styles.text}>Welcome!</Text>
             <TextInput
                 style={styles.input}
-                onChangeText={setUserName}
-                value={userName}
-                placeholder={'User Name'}
+                onChangeText={setEmail}
+                value={email}
+                placeholder={'Email'}
             />
             <TextInput
                 style={styles.input}
@@ -34,16 +50,23 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
             <TouchableOpacity onPress={onLoginCallback} style={styles.button}>
                 <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
-
+            <TouchableOpacity onPress={onRegisterCallback}>
+                <Text style={styles.textRegister}>Not register yet? Click here</Text>
+            </TouchableOpacity>
 
         </View>
     );
 }
 
+
 const styles = StyleSheet.create({
     text: {
         margin: 5,
         fontSize: 50,
+    },
+    textRegister: {
+        margin: 5,
+        fontSize: 30,
     },
     container: {
         flex: 1,

@@ -51,7 +51,7 @@ const PostsList: FC<{ route: any, navigation: any }> = ({ route, navigation }) =
             data={posts}
             keyExtractor={post => post.id.toString()}
             renderItem={({ item }) => (
-                <ListItem name={item.name} text={item.text} image={item.image} onRowSelected={onRowSelected} />
+                <ListItem name={item.sender} text={item.message} image={item.imageUrl} />
             )}
         >
         </FlatList>
