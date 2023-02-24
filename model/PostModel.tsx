@@ -3,18 +3,20 @@ import PostApi from "../api/PostApi"
 import FormData from "form-data"
 
 export type Post = {
+    id: String,
     sender: String,
     message: String,
     imageUrl: String,
 }
 
-const getAllPost = async () => {
+const getAllPosts = async () => {
     console.log("get All posts")
     const res: any = await PostApi.getAllPost()
     let data = Array<Post>()
     if (res.data) {
         res.data.forEach((obj: any) => {
             const st: Post = {
+                id: obj._id,
                 message: obj.message,
                 sender: obj.sender,
                 imageUrl: obj.imageUrl
@@ -25,7 +27,7 @@ const getAllPost = async () => {
     return data
 }
 
-const addPost = async (post: Post) => {
+const addPost = async (post: any) => {
     console.log("add post")
     const data = {
         message: post.message,
@@ -58,4 +60,4 @@ const uploadImage = async (imageURI: String) => {
     }
     return ""
 }
-export default { getAllPost, addPost, uploadImage }
+export default { getAllPosts, addPost, uploadImage }

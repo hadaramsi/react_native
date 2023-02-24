@@ -7,7 +7,8 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 // import StudentList from './componnents/StudentsList'
 // import StudentDetails from './componnents/UserDetails'
 // import StudentAdd from './componnents/UserAdd'
-import LoginScreen from './screens/LoginSceen';
+import LoginScreen from './screens/LoginSceen'
+import RegisterScreen from './screens/RegisterScreen'
 
 const InfoScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
   return (
@@ -50,6 +51,8 @@ const App: FC = () => {
       <NavigationContainer>
         <Stack.Navigator>
           <Stack.Screen name="LoginScreen" component={LoginScreen} />
+          <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+
         </Stack.Navigator>
 
       </NavigationContainer>

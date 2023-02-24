@@ -9,7 +9,7 @@ const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
     console.log("My app is running")
     // const [userName, setName] = useState("")
     // const [name, setName] = useState("")
-    const [address, setAddress] = useState("")
+    const [text, setAddress] = useState("")
     const [imageUri, setImageUri] = useState("")
 
     const askPermission = async () => {
@@ -54,10 +54,9 @@ const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
 
     const onSaveCallback = async () => {
         console.log("save button was pressed")
-        const post: Post = {
-            sender: "sender", //-------------------------------------fix--------------------------
-            message: "message",
-            imageUrl: "url",
+        const post = {
+            message: text,
+            imageUrl: imageUri,
         }
         try {
             if (imageUri != "") {
@@ -107,7 +106,7 @@ const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
                 <TextInput
                     style={styles.input}
                     onChangeText={setAddress}
-                    value={address}
+                    value={text}
                     placeholder={'Student Address'}
                 />
                 <View style={styles.buttonesContainer}>
