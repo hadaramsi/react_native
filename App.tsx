@@ -4,11 +4,12 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Ionicons from '@expo/vector-icons/Ionicons'
-// import StudentList from './componnents/StudentsList'
-// import StudentDetails from './componnents/UserDetails'
-// import StudentAdd from './componnents/UserAdd'
-import LoginScreen from './screens/LoginSceen'
+import LoginScreen from './screens/LoginSrceen'
 import RegisterScreen from './screens/RegisterScreen'
+import HomeScreen from './screens/HomeScreen'
+import MyPostsScreen from './screens/MyPostsScreen'
+import ChatScreen from './screens/ChatScreen'
+import MyProfileScreen from './screens/MyProfileScreen'
 
 const InfoScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
   return (
@@ -69,23 +70,25 @@ const App: FC = () => {
     <NavigationContainer>
       <Tab.Navigator screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName = "";
-          if (route.name === 'InfoScreen') {
-            iconName = focused ? 'information-circle' : 'information-circle-outline';
-          } else if (route.name === 'StudentStackCp') {
-            iconName = focused ? 'list-circle' : 'list-circle-outline';
+          let iconName;
+          if (route.name === "Home") {
+            iconName = focused ? 'home' : 'home-outline';
+          } else if (route.name === "My posts") {
+            iconName = focused ? 'book' : 'book-outline';
+          } else if (route.name === "My profile") {
+            iconName = focused ? 'briefcase' : 'briefcase-outline';
+          } else if (route.name === "Chat") {
+            iconName = focused ? 'chatbox' : 'chatbox-outline';
           }
-
-          // You can return any component that you like here!
-          return <Ionicons iconName={iconName} size={size} color={color} />;
+          return <Ionicons name={iconName} size={size} color={color} />;
         },
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',
       })}>
-        <Tab.Screen name="My profile" component={InfoScreen} />
-        <Tab.Screen name="My post" component={InfoScreen} />
-        <Tab.Screen name="Home" component={InfoScreen} />
-        <Tab.Screen name="Chat" component={InfoScreen} />
+        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="My profile" component={MyProfileScreen} />
+        <Tab.Screen name="My posts" component={MyPostsScreen} />
+        <Tab.Screen name="Chat" component={ChatScreen} />
       </Tab.Navigator>
 
     </NavigationContainer>
