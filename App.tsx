@@ -50,9 +50,16 @@ const App: FC = () => {
     return (
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="LoginScreen" component={LoginScreen} />
+          <Stack.Screen name="LoginScreen">
+            {(props) => (
+              <LoginScreen
+                route={props.route}
+                navigation={props.navigation}
+                setTokenFunction={setToken}
+              />
+            )}
+          </Stack.Screen>
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-
         </Stack.Navigator>
 
       </NavigationContainer>
@@ -64,9 +71,7 @@ const App: FC = () => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName = "";
           if (route.name === 'InfoScreen') {
-            iconName = focused
-              ? 'information-circle'
-              : 'information-circle-outline';
+            iconName = focused ? 'information-circle' : 'information-circle-outline';
           } else if (route.name === 'StudentStackCp') {
             iconName = focused ? 'list-circle' : 'list-circle-outline';
           }

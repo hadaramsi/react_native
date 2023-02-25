@@ -20,6 +20,8 @@ const loginUser = async (login: Login) => {
     }
     try {
         const res: any = await AuthApi.login(data)
+        console.log(res.data)
+
         return res.data
     } catch (err) {
         console.log("fail to login: " + err)

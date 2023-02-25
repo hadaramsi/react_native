@@ -12,7 +12,7 @@ import { AntDesign } from '@expo/vector-icons'
 import AuthModel, { Login } from '../model/AuthModel'
 
 
-const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
+const LoginScreen: FC<{ route: any, navigation: any, setTokenFunction: any }> = ({ route, navigation, setTokenFunction }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const onLoginCallback = async () => {
@@ -22,12 +22,14 @@ const LoginScreen: FC<{ route: any, navigation: any }> = ({ route, navigation })
         }
         try {
             if (email != "" && password != "") {
-                await AuthModel.loginUser(login)
+                const res = await AuthModel.loginUser(login)
+                console.log(res.accessToken)
+                setTokenFunction(res.accessToken)
             }
         } catch (err) {
             console.log("fail adding user: " + err)
         }
-        navigation.goBack()
+        // navigation.navigate("RegisterScreen")
     }
     const onRegisterCallback = () => {
         navigation.navigate("RegisterScreen")
