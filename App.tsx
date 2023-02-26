@@ -4,44 +4,14 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import LoginScreen from './screens/LoginSrceen'
-import RegisterScreen from './screens/RegisterScreen'
-import HomeScreen from './screens/HomeScreen'
+import LoginScreen from './componnents/LoginSrceen'
+import RegisterScreen from './componnents/RegisterScreen'
+import PostsList from './componnents/postsList'
 import MyPostsScreen from './screens/MyPostsScreen'
 import ChatScreen from './screens/ChatScreen'
-import MyProfileScreen from './screens/MyProfileScreen'
+import MyProfileScreen from './componnents/MyProfileScreen'
 
-const InfoScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
-  return (
-    <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-      <Text>Info Screen</Text>
-    </View>
-  );
-}
-
-// const Stack = createNativeStackNavigator()
-// const StudentStackCp: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
-//   const addNewStudents = () => {
-//     navigation.navigate('StudentAdd')
-//   }
-//   return (
-//     <StudentStack.Navigator>
-//       <StudentStack.Screen name="StudentList" component={StudentList} options={{
-//         headerRight: () => (
-//           <TouchableOpacity
-//             onPress={addNewStudents}>
-//             <Ionicons name={'add-outline'} size={40} color={'gray'} />
-//           </TouchableOpacity>
-//         ),
-//       }
-//       } />
-//       <StudentStack.Screen name="StudentDetails" component={StudentDetails} />
-//       <StudentStack.Screen name="StudentAdd" component={StudentAdd} />
-//     </StudentStack.Navigator>
-//   );
-// }
-
-const Tab = createBottomTabNavigator();
+const Tab = createBottomTabNavigator()
 
 const App: FC = () => {
   const Stack = createNativeStackNavigator()
@@ -70,7 +40,7 @@ const App: FC = () => {
     <NavigationContainer>
       <Tab.Navigator screenOptions={({ route }) => ({
         tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
+          let iconName: any;
           if (route.name === "Home") {
             iconName = focused ? 'home' : 'home-outline';
           } else if (route.name === "My posts") {
@@ -85,7 +55,7 @@ const App: FC = () => {
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',
       })}>
-        <Tab.Screen name="Home" component={HomeScreen} />
+        <Tab.Screen name="Home" component={PostsList} />
         <Tab.Screen name="My profile" component={MyProfileScreen} />
         <Tab.Screen name="My posts" component={MyPostsScreen} />
         <Tab.Screen name="Chat" component={ChatScreen} />

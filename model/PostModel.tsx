@@ -26,6 +26,23 @@ const getAllPosts = async () => {
     }
     return data
 }
+const getUserPosts = async () => {
+    console.log("get user posts")
+    const res: any = await PostApi.getUserPost()
+    let data = Array<Post>()
+    if (res.data) {
+        res.data.forEach((obj: any) => {
+            const st: Post = {
+                id: obj._id,
+                message: obj.message,
+                sender: obj.sender,
+                imageUrl: obj.imageUrl
+            }
+            data.push(st)
+        });
+    }
+    return data
+}
 
 const addPost = async (post: any) => {
     console.log("add post")

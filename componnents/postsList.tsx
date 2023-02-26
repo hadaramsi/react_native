@@ -1,7 +1,8 @@
-import { FC, useState, useEffect } from 'react';
+import React, { FC, useState, useEffect } from 'react';
 import { StatusBar, StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, FlatList, TouchableHighlight } from 'react-native';
-
+import Ionicons from '@expo/vector-icons/Ionicons'
 import PostModel, { Post } from '../model/PostModel'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 const ListItem: FC<{ name: String, text: String, image: String }> =
     ({ name, text, image }) => {
@@ -9,24 +10,43 @@ const ListItem: FC<{ name: String, text: String, image: String }> =
             <TouchableHighlight underlayColor={'gainsboro'}>
                 <View style={styles.listRow}>
                     <Text style={styles.name}>{name}</Text>
-                    {image == "" && <Image style={styles.listRowImage} source={require('../assets/ava.png')} />}
+                    {image == "" && <Image style={styles.listRowImage} source={require('../assets/avatar.png')} />}
                     {image != "" && <Image style={styles.listRowImage} source={{ uri: image.toString() }} />}
                     <Text style={styles.textPost}>{text}</Text>
-                    {/* <View style={styles.listRowTextContainer}>
+                    <View style={styles.listRowTextContainer}>
                         <Text style={styles.listRowName}>{name}</Text>
-                        <Text style={styles.listRowId}>{id}</Text>
-                    </View> */}
+                        {/* <Text style={styles.listRowId}>{id}</Text> */}
+                    </View>
                 </View>
             </TouchableHighlight>
         )
     }
+const PostsStack = createNativeStackNavigator()
 
+const PostsStackCp: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
+    const addNewPost = () => {
+        navigation.navigate('PostAdd')
+    }
+    return (
+        <PostsStack.Navigator>
+            <PostsStack.Screen name="PostsList" component={PostsList} options={{
+                headerRight: () => (
+                    <TouchableOpacity
+                        onPress={addNewPost}>
+                        <Ionicons name={'add-outline'} size={40} color={'gray'} />
+                    </TouchableOpacity>
+                ),
+            }} />
+        </PostsStack.Navigator>
+
+    );
+}
 
 const PostsList: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
-    // const onRowSelected = (id: String) => {
-    //     console.log("in the list: row was selected " + id)
-    //     navigation.navigate('StudentDetails', { studentId: id })
-    // }
+    const onRowSelected = (id: String) => {
+        console.log("in the list: row was selected " + id)
+        navigation.navigate('StudentDetails', { studentId: id })
+    }
     const [posts, setPosts] = useState<Array<Post>>();
 
     useEffect(() => {
@@ -55,6 +75,7 @@ const PostsList: FC<{ route: any, navigation: any }> = ({ route, navigation }) =
             )}
         >
         </FlatList>
+
     )
 }
 

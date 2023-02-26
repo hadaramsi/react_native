@@ -7,10 +7,10 @@ import {
     TouchableOpacity,
 } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
-import Ionicons from '@expo/vector-icons/Ionicons'
 import { AntDesign } from '@expo/vector-icons'
 import AuthModel, { Login } from '../model/AuthModel'
-
+import ClientApi from '../api/ClientApi'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const LoginScreen: FC<{ route: any, navigation: any, setTokenFunction: any }> = ({ route, navigation, setTokenFunction }) => {
     const [email, setEmail] = useState("")
@@ -23,12 +23,24 @@ const LoginScreen: FC<{ route: any, navigation: any, setTokenFunction: any }> = 
         try {
             if (email != "" && password != "") {
                 const res = await AuthModel.loginUser(login)
-                console.log(res.accessToken)
-                setTokenFunction(res.accessToken)
+                if (res == "") {
+                    console.log("res is null")
+                    return
+                }
+                console.log(res.tokens.accessToken)
+                setTokenFunction(res.tokens.accessToken)
+                ClientApi.setHeader(
+                    "Authorization",
+                    "JWT " + res.tokens.accessToken
+                )
+                await AsyncStorage.setItem("accessToken", res.tokens.accessToken)
+                await AsyncStorage.setItem("refreshToken", res.tokens.refreshToken)
+                await AsyncStorage.setItem("userId", res.userId)
             }
         } catch (err) {
             console.log("fail adding user: " + err)
         }
+
         // navigation.navigate("RegisterScreen")
     }
     const onRegisterCallback = () => {

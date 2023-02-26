@@ -7,8 +7,6 @@ import * as ImagePicker from 'expo-image-picker'
 
 const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
     console.log("My app is running")
-    // const [userName, setName] = useState("")
-    // const [name, setName] = useState("")
     const [text, setAddress] = useState("")
     const [imageUri, setImageUri] = useState("")
 

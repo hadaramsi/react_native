@@ -15,6 +15,7 @@ import AuthModel, { Register } from '../model/AuthModel'
 import * as ImagePicker from 'expo-image-picker'
 
 const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
+    const userId = JSON.stringify(route.params.userId)
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [fullName, setFullName] = useState("")
@@ -90,7 +91,15 @@ const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigatio
                     onChangeText={setEmail}
                     value={fullName}
                 />
-                {imageUrl != "" && <Image source={{ uri: imageUrl }} style={styles.avatar}></Image>}
+                <Image source={{ uri: imageUrl }} style={styles.avatar}></Image>
+                <View>
+                    <TouchableOpacity onPress={openCamera} >
+                        <Ionicons name={'camera'} style={styles.cameraButton} size={50} />
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={openGallery} >
+                        <Ionicons name={'image'} style={styles.galleryButton} size={50} />
+                    </TouchableOpacity>
+                </View>
                 <TouchableOpacity onPress={onEditProfileCallback} style={styles.button}>
                     <Text style={styles.buttonText}>Save</Text>
                 </TouchableOpacity>
@@ -117,6 +126,7 @@ const styles = StyleSheet.create({
         padding: 12,
         backgroundColor: 'salmon',
         borderRadius: 10,
+        alignSelf: 'center',
     },
     textSade: {
         margin: 2,

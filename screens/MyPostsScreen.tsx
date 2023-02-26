@@ -1,167 +1,105 @@
-import React, { FC, useState } from 'react';
-import {
-    View,
-    Text,
-    TextInput,
-    StyleSheet,
-    TouchableOpacity,
-    Image,
-    ScrollView
-} from 'react-native'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-import Ionicons from '@expo/vector-icons/Ionicons'
-import { AntDesign } from '@expo/vector-icons'
-import AuthModel, { Register } from '../model/AuthModel'
-import * as ImagePicker from 'expo-image-picker'
+import { FC, useState, useEffect } from 'react';
+import { StatusBar, StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, FlatList, TouchableHighlight } from 'react-native';
 
-const MyPostsScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
-    const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
-    const [fullName, setFullName] = useState("")
-    const [imageUrl, setImageUrl] = useState("")
-    // const [avatarUri, setAvatarImage] = useState("")
-    const onRegisterCallback = async () => {
-        const register = {
-            email: email,
-            password: password,
-            fullName: fullName,
-            imageUrl: imageUrl
-        }
-        try {
-            if (email != "" && password != "" && fullName != "") {
-                if (imageUrl != "") {
-                    console.log("uploading image")
-                    const url = await AuthModel.uploadImage(imageUrl)
-                    register.imageUrl = url
-                    console.log("got url from upload: " + url)
-                }
-                await AuthModel.RegisterUser(register)
+import PostModel, { Post } from '../model/PostModel'
+
+const ListItem: FC<{ name: String, text: String, image: String }> =
+    ({ name, text, image }) => {
+        return (
+            <TouchableHighlight underlayColor={'gainsboro'}>
+                <View style={styles.listRow}>
+                    <Text style={styles.name}>{name}</Text>
+                    {image == "" && <Image style={styles.listRowImage} source={require('../assets/avatar.png')} />}
+                    {image != "" && <Image style={styles.listRowImage} source={{ uri: image.toString() }} />}
+                    <Text style={styles.textPost}>{text}</Text>
+                    {/* <View style={styles.listRowTextContainer}>
+                        <Text style={styles.listRowName}>{name}</Text>
+                        <Text style={styles.listRowId}>{id}</Text>
+                    </View> */}
+                </View>
+            </TouchableHighlight>
+        )
+    }
+
+
+const MyPostsList: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
+    // const onRowSelected = (id: String) => {
+    //     console.log("in the list: row was selected " + id)
+    //     navigation.navigate('StudentDetails', { studentId: id })
+    // }
+    const [posts, setPosts] = useState<Array<Post>>();
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', async () => {
+            console.log('focus')
+            let posts: Post[] = []
+            try {
+                posts = await PostModel.getAllPosts()
+                console.log("fetching posts complete")
+            } catch (err) {
+                console.log("fail fetching students " + err)
             }
-        } catch (err) {
-            console.log("fail register user: " + err)
-        }
-        navigation.goBack()
-    }
+            console.log("fetching finish")
+            setPosts(posts)
+        })
+        return unsubscribe
+    })
 
-    const openCamera = async () => {
-        try {
-            const res = await ImagePicker.launchCameraAsync()
-            if (!res.canceled && res.assets.length > 0) {
-                const url = res.assets[0].uri
-                setImageUrl(url)
-            }
 
-        } catch (err) {
-            console.log("open camera error:" + err)
-        }
-    }
-
-    const openGallery = async () => {
-        try {
-            const res = await ImagePicker.launchImageLibraryAsync()
-            if (!res.canceled && res.assets.length > 0) {
-                const url = res.assets[0].uri
-                setImageUrl(url)
-            }
-
-        } catch (err) {
-            console.log("open camera error:" + err)
-        }
-    }
-    const onEditProfileCallback = () => {
-        //-------------------------------------to do ---------------------------------------
-    }
     return (
-        <ScrollView>
-            <View style={styles.container}>
-                <Text style={styles.text}>Your profile details</Text>
-                <TextInput
-                    style={styles.input}
-                    value={email}
-                    editable={false}
-                />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setEmail}
-                    value={'******'}
-                />
-                <TextInput
-                    style={styles.input}
-                    onChangeText={setEmail}
-                    value={fullName}
-                />
-                {imageUrl != "" && <Image source={{ uri: imageUrl }} style={styles.avatar}></Image>}
-                <TouchableOpacity onPress={onEditProfileCallback} style={styles.button}>
-                    <Text style={styles.buttonText}>Save</Text>
-                </TouchableOpacity>
-            </View>
-        </ScrollView >
+        <FlatList style={styles.flatlist}
+            data={posts}
+            keyExtractor={post => post.id.toString()}
+            renderItem={({ item }) => (
+                <ListItem name={item.sender} text={item.message} image={item.imageUrl} />
+            )}
+        >
+        </FlatList>
     )
 }
 
+
 const styles = StyleSheet.create({
-    text: {
-        margin: 2,
-        fontSize: 30,
-        alignSelf: 'center',
-    },
-    buttonText: {
-        fontSize: 20,
-        textAlign: 'center',
-        color: 'white',
-    },
-    button: {
-        width: 200,
-        height: 50,
-        margin: 12,
-        padding: 12,
-        backgroundColor: 'salmon',
-        borderRadius: 10,
-    },
-    textSade: {
-        margin: 2,
-        fontSize: 20,
-        alignSelf: 'center',
-    },
     container: {
+        marginTop: StatusBar.currentHeight,
+        flex: 1,
+        backgroundColor: 'grey',
+    },
+    flatlist: {
         flex: 1,
     },
-    avatar: {
-        height: 250,
-        resizeMode: "contain",
-        alignSelf: 'center',
-        width: '100%'
-    },
-    cameraButton: {
-        position: 'absolute',
-        bottom: -10,
-        left: 10,
-        width: 50,
-        height: 50,
-    },
-    galleryButton: {
-        position: 'absolute',
-        bottom: -10,
-        right: 10,
-        width: 50,
-        height: 50,
-    },
-    input: {
-        height: 40,
-        width: 300,
-        margin: 5,
-        borderWidth: 1,
-        padding: 5,
-        borderRadius: 5,
-        alignSelf: 'center',
-    },
-    buttonesContainer: {
-        flexDirection: 'row',
-        alignSelf: 'center',
-    },
-    icon: {
+    listRow: {
+        margin: 4,
         flexDirection: "row",
-        alignSelf: 'center',
+        height: 150,
+        elevation: 1,
+        borderRadius: 2,
     },
-})
-export default MyPostsScreen
+    listRowImage: {
+        margin: 10,
+        resizeMode: "contain",
+        height: 130,
+        width: 130,
+    },
+    listRowTextContainer: {
+        flex: 1,
+        margin: 10,
+        justifyContent: "space-around"
+    },
+    listRowName: {
+        fontSize: 30
+    },
+    name: {
+        fontSize: 20,
+        marginTop: 10,
+    },
+    textPost: {
+        fontSize: 15,
+        margin: 4,
+    },
+    listRowId: {
+        fontSize: 25
+    }
+});
+
+export default MyPostsList
