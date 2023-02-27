@@ -13,6 +13,7 @@ import MyProfileScreen from './componnents/MyProfileScreen'
 import PostAdd from './componnents/PostAdd';
 import apiClient from './api/ClientApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import MyPostsList from './screens/MyPostsScreen';
 
 const Tab = createBottomTabNavigator()
 
@@ -43,7 +44,7 @@ const MyPostsStackCp: FC<{ route: any, navigation: any }> = ({ route, navigation
   }
   return (
     <MyPostsStack.Navigator>
-      <MyPostsStack.Screen name="My posts List" component={PostsList} options={{
+      <MyPostsStack.Screen name="My posts List" component={MyPostsList} options={{
         headerRight: () => (
           <TouchableOpacity
             onPress={addNewPost}>
@@ -93,15 +94,15 @@ const App: FC = () => {
         tabBarIcon: ({ focused, color, size }) => {
           let iconName: any;
           if (route.name === "Home") {
-            iconName = focused ? 'home' : 'home-outline';
+            iconName = focused ? 'home' : 'home-outline'
           } else if (route.name === "My posts") {
-            iconName = focused ? 'book' : 'book-outline';
+            iconName = focused ? 'book' : 'book-outline'
           } else if (route.name === "My profile") {
-            iconName = focused ? 'briefcase' : 'briefcase-outline';
+            iconName = focused ? 'briefcase' : 'briefcase-outline'
           } else if (route.name === "Chat") {
-            iconName = focused ? 'chatbox' : 'chatbox-outline';
+            iconName = focused ? 'chatbox' : 'chatbox-outline'
           }
-          return <Ionicons name={iconName} size={size} color={color} />;
+          return <Ionicons name={iconName} size={size} color={color} />
         },
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',

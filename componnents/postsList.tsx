@@ -3,22 +3,23 @@ import { StatusBar, StyleSheet, Text, View, Image, TouchableOpacity, Button, Ale
 import Ionicons from '@expo/vector-icons/Ionicons'
 import PostModel, { Post } from '../model/PostModel'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ListItem: FC<{ name: String, text: String, image: String, userImage: String }> =
     ({ name, text, image, userImage }) => {
+
         return (
             <TouchableHighlight underlayColor={'gainsboro'}>
-                <View style={styles.listRow}>
+                <View style={styles.list}>
                     <View style={styles.listRowPosted}>
+                        {userImage == "url" && <Image style={styles.userImg} source={require('../assets/avatar.png')} />}
+                        {userImage != "url" && <Image style={styles.userImg} source={{ uri: userImage.toString() }} />}
                         <Text style={styles.name}>{name}</Text>
-                        {userImage == "" && <Image style={styles.userImg} source={require('../assets/avatar.png')} />}
-                        {userImage != "" && <Image style={styles.userImg} source={{ uri: userImage.toString() }} />}
                     </View>
                     <View style={styles.listRowTextContainer}>
                         <Text style={styles.textPost}>{text}</Text>
-                        {image == "" && <Image style={styles.listRowImage} source={require('../assets/avatar.png')} />}
-                        {image != "" && <Image style={styles.listRowImage} source={{ uri: image.toString() }} />}
-                        <Text style={styles.listRowName}>{name}</Text>
+                        {image == "url" && <Image style={styles.listRowImage} source={require('../assets/avatar.png')} />}
+                        {image != "url" && <Image style={styles.listRowImage} source={{ uri: image.toString() }} />}
                     </View>
                 </View>
             </TouchableHighlight>
@@ -26,19 +27,13 @@ const ListItem: FC<{ name: String, text: String, image: String, userImage: Strin
     }
 
 const PostsList: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
-    const onRowSelected = (id: String) => {
-        console.log("in the list: row was selected " + id)
-        navigation.navigate('StudentDetails', { studentId: id })
-    }
     const [posts, setPosts] = useState<Array<Post>>();
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
-            console.log('focus')
             let posts: Post[] = []
             try {
                 posts = await PostModel.getAllPosts()
-                console.log("fetching posts complete")
             } catch (err) {
                 console.log("fail fetching students " + err)
             }
@@ -54,7 +49,7 @@ const PostsList: FC<{ route: any, navigation: any }> = ({ route, navigation }) =
             data={posts}
             keyExtractor={post => post.id.toString()}
             renderItem={({ item }) => (
-                <ListItem name={item.sender} text={item.message} image={item.imageUrl} userImage={item.imageUrl} />
+                <ListItem name={item.sender} text={item.message} image={item.imageUrl} userImage={item.userImageUrl} />
             )}
         >
         </FlatList>
@@ -72,12 +67,18 @@ const styles = StyleSheet.create({
     flatlist: {
         flex: 1,
     },
-    listRow: {
+    list: {
         margin: 4,
-        flexDirection: "row",
-        height: 150,
+        flex: 1,
         elevation: 1,
         borderRadius: 2,
+    },
+    button: {
+        position: 'absolute',
+        bottom: -10,
+        left: 10,
+        width: 50,
+        height: 50,
     },
     listRowPosted: {
         margin: 4,

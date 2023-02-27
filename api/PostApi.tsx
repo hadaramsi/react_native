@@ -13,9 +13,9 @@ const getAllPosts = async () => {
     }
     return res;
 };
-const getUserPost = async () => {
+const getUserPost = async (userId: String) => {
     // return apiClient.get("/post")
-    const res: any = await ClientApi.get("/post")
+    const res: any = await ClientApi.get("/post?sender=" + userId)
     console.log("in getUserPost" + res.status);
 
     if (res.status == 401) {

@@ -6,7 +6,8 @@ import {
     StyleSheet,
     TouchableOpacity,
     Image,
-    ScrollView
+    ScrollView,
+    StatusBar
 } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -50,12 +51,6 @@ const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigatio
             setImageUrl(user.image)
         }
     }
-
-    // React.useEffect(() => {
-    //     // console.log("user id is" + userId)
-
-    //     getDetails()
-    // }, [])
 
     const askPermission = async () => {
         try {
@@ -161,6 +156,8 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+        marginTop: StatusBar.currentHeight
+
     },
     avatar: {
         height: 250,

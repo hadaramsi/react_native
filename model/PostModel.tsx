@@ -1,11 +1,13 @@
 import PostApi from "../api/PostApi"
 import FormData from "form-data"
+import UserModel from "./UserModel"
 
 export type Post = {
     id: String,
     sender: String,
     message: String,
     imageUrl: String,
+    userImageUrl: String
 }
 
 const getAllPosts = async () => {
@@ -14,32 +16,37 @@ const getAllPosts = async () => {
     let data = Array<Post>()
     console.log(res.data)
     if (res.data) {
-        res.data.forEach((obj: any) => {
+        for (let i = 0; i < res.data.post.length; i++) {
+            const user = await UserModel.getUserById(res.data.post[i].sender)
             const st: Post = {
-                id: obj._id,
-                message: obj.message,
-                sender: obj.sender,
-                imageUrl: obj.imageUrl
+                id: res.data.post[i]._id,
+                message: res.data.post[i].message,
+                sender: user.fullName,
+                imageUrl: res.data.post[i].imageUrl,
+                userImageUrl: user.image
+
             }
             data.push(st)
-        });
+        }
     }
     return data
 }
-const getUserPosts = async () => {
+const getUserPosts = async (userId: String) => {
     console.log("get user posts")
-    const res: any = await PostApi.getUserPost()
+    const res: any = await PostApi.getUserPost(userId)
     let data = Array<Post>()
     if (res.data) {
-        res.data.forEach((obj: any) => {
+        for (let i = 0; i < res.data.post.length; i++) {
+            const user = await UserModel.getUserById(res.data.post[i].sender)
             const st: Post = {
-                id: obj._id,
-                message: obj.message,
-                sender: obj.sender,
-                imageUrl: obj.imageUrl
+                id: res.data.post[i]._id,
+                message: res.data.post[i].message,
+                sender: user.fullName,
+                imageUrl: res.data.post[i].imageUrl,
+                userImageUrl: user.image
             }
             data.push(st)
-        });
+        }
     }
     return data
 }
