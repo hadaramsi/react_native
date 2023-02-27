@@ -1,4 +1,3 @@
-import apiClient from "../api/ClientApi"
 import PostApi from "../api/PostApi"
 import FormData from "form-data"
 
@@ -11,8 +10,9 @@ export type Post = {
 
 const getAllPosts = async () => {
     console.log("get All posts")
-    const res: any = await PostApi.getAllPost()
+    const res: any = await PostApi.getAllPosts()
     let data = Array<Post>()
+    console.log(res.data)
     if (res.data) {
         res.data.forEach((obj: any) => {
             const st: Post = {
@@ -77,4 +77,4 @@ const uploadImage = async (imageURI: String) => {
     }
     return ""
 }
-export default { getAllPosts, addPost, uploadImage }
+export default { getAllPosts, addPost, getUserPosts, uploadImage }

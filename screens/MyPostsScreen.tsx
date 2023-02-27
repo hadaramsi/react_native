@@ -34,7 +34,7 @@ const MyPostsList: FC<{ route: any, navigation: any }> = ({ route, navigation })
             console.log('focus')
             let posts: Post[] = []
             try {
-                posts = await PostModel.getAllPosts()
+                posts = await PostModel.getUserPosts()
                 console.log("fetching posts complete")
             } catch (err) {
                 console.log("fail fetching students " + err)

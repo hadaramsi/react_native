@@ -1,19 +1,47 @@
-import apiClient from "./ClientApi"
-import { Post } from "../model/PostModel"
+import ClientApi from "./ClientApi"
 
-const getAllPost = async () => {
-    return apiClient.get("/post")
-}
+import AuthModel from "../model/AuthModel"
+
+const getAllPosts = async () => {
+    const res: any = await ClientApi.get("/post");
+    console.log("in getAllPosts " + res.status);
+
+    if (res.status == 401) {
+        console.log("in 401 - getAllPosts");
+        await AuthModel.refreshToken();
+        return ClientApi.get("/post");
+    }
+    return res;
+};
 const getUserPost = async () => {
-    return apiClient.get("/post")
+    // return apiClient.get("/post")
+    const res: any = await ClientApi.get("/post")
+    console.log("in getUserPost" + res.status);
+
+    if (res.status == 401) {
+        console.log("in 401 - getUserPost");
+        await AuthModel.refreshToken();
+        return ClientApi.get("/post");
+    }
+    return res;
 }
 
 const addPost = async (userJson: any) => {
-    return apiClient.post("/post", userJson)
+    // return apiClient.post("/post", userJson)
+    const res: any = await ClientApi.post("/post", userJson)
+    console.log("in addPost" + res.status);
+
+    if (res.status == 401) {
+        console.log("in 401 - addPost");
+        await AuthModel.refreshToken();
+        return ClientApi.get("/post");
+    }
+    return res;
 }
 
 const uploadImage = async (image: any) => {
-    return apiClient.post("/file/file", image)
+    return ClientApi.post("/file/file", image)
+
 }
 
-export default { getAllPost, addPost, uploadImage, getUserPost }
+export default { getAllPosts, addPost, uploadImage, getUserPost }

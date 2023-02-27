@@ -1,5 +1,7 @@
 import AuthApi from "../api/AuthApi"
+import ClientApi from "../api/ClientApi"
 import FormData from "form-data"
+import AsyncStorage from "@react-native-async-storage/async-storage"
 
 export type Login = {
     email: String,
@@ -29,6 +31,24 @@ const loginUser = async (login: Login) => {
     return null
 }
 
+const refreshToken = async () => {
+    console.log("refreshToken()");
+    const token = await AsyncStorage.getItem("refreshToken");
+    ClientApi.setHeader("Authorization", "JWT " + token);
+
+    const res: any = await AuthApi.refresh();
+    if (res.status == 400) {
+        console.log("error in refresh");
+        // console.log(res);
+        return
+    }
+    // console.log("end refresh");
+    // console.log(res);
+    ClientApi.setHeader("Authorization", "JWT " + res.data.accessToken);
+    await AsyncStorage.setItem("accessToken", res.data.accessToken);
+    await AsyncStorage.setItem("refreshToken", res.data.refreshToken);
+};
+
 const RegisterUser = async (register: Register) => {
     console.log("register user")
     const data = {
@@ -45,6 +65,8 @@ const RegisterUser = async (register: Register) => {
     }
     return null
 }
+
+
 const uploadImage = async (imageURI: String) => {
     var body = new FormData();
     body.append('file', { name: 'name', type: 'image/jpeg', uri: imageURI })
@@ -64,4 +86,4 @@ const uploadImage = async (imageURI: String) => {
     }
     return ""
 }
-export default { loginUser, RegisterUser, uploadImage }
+export default { loginUser, RegisterUser, refreshToken, uploadImage }

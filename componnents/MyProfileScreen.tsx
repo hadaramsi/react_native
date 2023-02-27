@@ -11,38 +11,67 @@ import {
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { AntDesign } from '@expo/vector-icons'
-import AuthModel, { Register } from '../model/AuthModel'
+import UserModel from '../model/UserModel'
 import * as ImagePicker from 'expo-image-picker'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
-    const userId = JSON.stringify(route.params.userId)
+    // console.log("route.params.userId is: " + route.params)
+
+    // const userId = JSON.stringify(route.params.userId)
+
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [fullName, setFullName] = useState("")
-    const [imageUrl, setImageUrl] = useState("")
+    const [imageUrl, setImageUrl] = useState("url")
     // const [avatarUri, setAvatarImage] = useState("")
-    const onRegisterCallback = async () => {
-        const register = {
+    const onMyProfileCallback = async () => {
+        const user = {
             email: email,
             password: password,
             fullName: fullName,
             imageUrl: imageUrl
         }
         try {
-            if (email != "" && password != "" && fullName != "") {
-                if (imageUrl != "") {
-                    console.log("uploading image")
-                    const url = await AuthModel.uploadImage(imageUrl)
-                    register.imageUrl = url
-                    console.log("got url from upload: " + url)
-                }
-                await AuthModel.RegisterUser(register)
-            }
+
+
         } catch (err) {
             console.log("fail register user: " + err)
         }
         navigation.goBack()
     }
+    const getDetails = async () => {
+        const userID = await AsyncStorage.getItem("userId")
+        if (userID != null) {
+            const user: any = await UserModel.getUserById(userID)
+            console.log("user.email is : " + user.email)
+            setEmail(user.email)
+            setFullName(user.fullName)
+            setImageUrl(user.image)
+        }
+    }
+
+    // React.useEffect(() => {
+    //     // console.log("user id is" + userId)
+
+    //     getDetails()
+    // }, [])
+
+    const askPermission = async () => {
+        try {
+            const res = await ImagePicker.getCameraPermissionsAsync()
+            if (!res.granted) {
+                alert("camera permission is requiered!")
+            }
+        } catch (err) {
+            console.log("ask permission error " + err)
+        }
+    }
+    React.useEffect(() => {
+
+        askPermission()
+        getDetails()
+    }, [])
 
     const openCamera = async () => {
         try {
@@ -68,9 +97,6 @@ const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigatio
         } catch (err) {
             console.log("open camera error:" + err)
         }
-    }
-    const onEditProfileCallback = () => {
-        //-------------------------------------to do ---------------------------------------
     }
     return (
         <ScrollView>
@@ -100,7 +126,7 @@ const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigatio
                         <Ionicons name={'image'} style={styles.galleryButton} size={50} />
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={onEditProfileCallback} style={styles.button}>
+                <TouchableOpacity onPress={onMyProfileCallback} style={styles.button}>
                     <Text style={styles.buttonText}>Save</Text>
                 </TouchableOpacity>
             </View>

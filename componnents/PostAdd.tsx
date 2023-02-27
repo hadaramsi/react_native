@@ -1,13 +1,13 @@
-import { useState, FC, useEffect } from 'react';
+import { useState, FC, useEffect } from 'react'
 import { StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, ScrollView } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
-
+import Ionicons from '@expo/vector-icons/Ionicons'
 import PostModel, { Post } from '../model/PostModel'
 import * as ImagePicker from 'expo-image-picker'
+import React from "react"
 
 const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
     console.log("My app is running")
-    const [text, setAddress] = useState("")
+    const [text, setPostText] = useState("")
     const [imageUri, setImageUri] = useState("")
 
     const askPermission = async () => {
@@ -20,7 +20,7 @@ const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
             console.log("ask permission error " + err)
         }
     }
-    useEffect(() => {
+    React.useEffect(() => {
         askPermission()
     }, [])
 
@@ -39,11 +39,11 @@ const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
 
     const openGallery = async () => {
         try {
-            // const res = await ImagePicker.launchImageLibraryAsync()
-            // if (!res.canceled && res.assets.length > 0) {
-            //     const uri = res.assets[0].uri
-            //     setAvatarUri(uri)
-            // }
+            const res = await ImagePicker.launchImageLibraryAsync()
+            if (!res.canceled && res.assets.length > 0) {
+                const uri = res.assets[0].uri
+                setImageUri(uri)
+            }
 
         } catch (err) {
             console.log("open camera error:" + err)
@@ -54,7 +54,7 @@ const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
         console.log("save button was pressed")
         const post = {
             message: text,
-            imageUrl: imageUri,
+            imageUrl: "",
         }
         try {
             if (imageUri != "") {
@@ -78,8 +78,8 @@ const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
         <ScrollView>
             <View style={styles.container}>
                 <View>
-                    {/* {avatarUri == "" && <Image source={require('../assets/ava.png')} style={styles.avatar}></Image>}
-                    {avatarUri != "" && <Image source={{ uri: avatarUri }} style={styles.avatar}></Image>} */}
+                    {imageUri == "" && <Image source={require('../assets/avatar.png')} style={styles.avatar}></Image>}
+                    {imageUri != "" && <Image source={{ uri: imageUri }} style={styles.avatar}></Image>}
 
                     <TouchableOpacity onPress={openCamera} >
                         <Ionicons name={'camera'} style={styles.cameraButton} size={50} />
@@ -88,24 +88,11 @@ const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
                         <Ionicons name={'image'} style={styles.galleryButton} size={50} />
                     </TouchableOpacity>
                 </View>
-
-                {/* <TextInput
-                    style={styles.input}
-                    onChangeText={setId}
-                    value={id}
-                    placeholder={'Student ID'}
-                /> */}
-                {/* <TextInput
-                    style={styles.input}
-                    onChangeText={setName}
-                    value={name}
-                    placeholder={'Student Name'}
-                /> */}
                 <TextInput
                     style={styles.input}
-                    onChangeText={setAddress}
+                    onChangeText={setPostText}
                     value={text}
-                    placeholder={'Student Address'}
+                    placeholder={'text'}
                 />
                 <View style={styles.buttonesContainer}>
                     <TouchableOpacity onPress={onCancellCallback} style={styles.button}>
@@ -159,7 +146,7 @@ const styles = StyleSheet.create({
         flex: 1,
         margin: 12,
         padding: 12,
-        backgroundColor: 'blue',
+        backgroundColor: 'salmon',
         borderRadius: 10,
     },
     buttonText: {
