@@ -8,18 +8,24 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const ListItem: FC<{ name: String, text: String, image: String, userImage: String }> =
     ({ name, text, image, userImage }) => {
 
+        console.log("userImage11111111111111111111111111111111111")
+        console.log(userImage)
+
+        console.log("postImage55555555555555555555555555555555555")
+        console.log(image)
+
         return (
             <TouchableHighlight underlayColor={'gainsboro'}>
                 <View style={styles.list}>
                     <View style={styles.listRowPosted}>
-                        {userImage == "url" && <Image style={styles.userImg} source={require('../assets/avatar.png')} />}
-                        {userImage != "url" && <Image style={styles.userImg} source={{ uri: userImage.toString() }} />}
+                        {userImage == "" && <Image style={styles.userImg} source={require('../assets/avatar.png')} />}
+                        {userImage != "" && <Image style={styles.userImg} source={{ uri: userImage.toString() }} />}
                         <Text style={styles.name}>{name}</Text>
                     </View>
                     <View style={styles.listRowTextContainer}>
                         <Text style={styles.textPost}>{text}</Text>
-                        {image == "url" && <Image style={styles.listRowImage} source={require('../assets/avatar.png')} />}
-                        {image != "url" && <Image style={styles.listRowImage} source={{ uri: image.toString() }} />}
+                        {image == "" && <Image style={styles.listRowImage} source={require('../assets/avatar.png')} />}
+                        {image != "" && <Image style={styles.listRowImage} source={{ uri: image.toString() }} />}
                     </View>
                 </View>
             </TouchableHighlight>

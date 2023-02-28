@@ -19,7 +19,7 @@ const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigatio
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("******")
     const [fullName, setFullName] = useState("")
-    const [imageUrl, setImageUrl] = useState("url")
+    const [imageUrl, setImageUrl] = useState("")
 
     const getDetails = async () => {
         const userID = await AsyncStorage.getItem("userId")
@@ -28,6 +28,8 @@ const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigatio
             setEmail(user.email)
             setFullName(user.fullName)
             setImageUrl(user.image)
+            console.log("imageUrl000000000000000000000000000000000")
+            console.log(imageUrl)
         }
     }
     const askPermission = async () => {
@@ -113,8 +115,8 @@ const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigatio
                     onChangeText={setFullName}
                     value={fullName}
                 />
-                {imageUrl == "url" && <Image style={styles.avatar} source={require('../assets/avatar.png')} />}
-                {imageUrl != "url" && <Image style={styles.avatar} source={{ uri: imageUrl.toString() }} />}
+                {imageUrl == "" && <Image style={styles.avatar} source={require('../assets/avatar.png')} />}
+                {imageUrl != "" && <Image style={styles.avatar} source={{ uri: imageUrl }} />}
                 <View>
                     <TouchableOpacity onPress={openCamera} >
                         <Ionicons name={'camera'} style={styles.cameraButton} size={50} />

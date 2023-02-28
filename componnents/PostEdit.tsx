@@ -9,13 +9,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const PostEdit: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
     const [text, setPostText] = useState("")
     const [imageUri, setImageUri] = useState("")
+    let postId = route.params.postId
 
     const getDetails = async () => {
-        const postID = await AsyncStorage.getItem("postId")
-        if (postID != null) {
-            const post: any = await PostModel.getPostById(postID)
-            setPostText(post.message)
-            setImageUri(post.imageUrl)
+        const post: any = await PostModel.getPostById(postId)
+        if (post != null) {
+            setPostText(post.post.message)
+            setImageUri(post.post.imageUrl)
         }
     }
     const askPermission = async () => {

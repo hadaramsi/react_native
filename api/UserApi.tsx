@@ -12,6 +12,8 @@ const getUserById = async (userId: String) => {
 }
 
 const putUserById = async (userId: String, data: any) => {
+    console.log("in put api")
+
     let res: any = await ClientApi.put("/user/" + userId, data)
     if (res.status == 401) {
         await AuthModel.refreshToken()

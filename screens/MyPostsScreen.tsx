@@ -26,8 +26,8 @@ const ListItem: FC<{ name: String, text: String, image: String, userImage: Strin
             <TouchableHighlight underlayColor={'gainsboro'}>
                 <View style={styles.list}>
                     <View style={styles.listRowPosted}>
-                        {userImage == "url" && <Image style={styles.userImg} source={require('../assets/avatar.png')} />}
-                        {userImage != "url" && <Image style={styles.userImg} source={{ uri: userImage.toString() }} />}
+                        {userImage == "" && <Image style={styles.userImg} source={require('../assets/avatar.png')} />}
+                        {userImage != "" && <Image style={styles.userImg} source={{ uri: userImage.toString() }} />}
                         <Text style={styles.name}>{name}</Text>
                         <TouchableOpacity onPress={onDeleteCallback} style={styles.deleteButton} >
                             <Ionicons name={"trash-bin"} size={30} />
@@ -38,8 +38,8 @@ const ListItem: FC<{ name: String, text: String, image: String, userImage: Strin
                     </View>
                     <View style={styles.listRowTextContainer}>
                         <Text style={styles.textPost}>{text}</Text>
-                        {image == "url" && <Image style={styles.listRowImage} source={require('../assets/avatar.png')} />}
-                        {image != "url" && <Image style={styles.listRowImage} source={{ uri: image.toString() }} />}
+                        {image == "" && <Image style={styles.listRowImage} source={require('../assets/avatar.png')} />}
+                        {image != "" && <Image style={styles.listRowImage} source={{ uri: image.toString() }} />}
                     </View>
                 </View>
             </TouchableHighlight>
