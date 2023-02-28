@@ -35,14 +35,14 @@ const getPostById = async (postId: String) => {
 }
 
 const deletePost = async (postId: String) => {
-    const res: any = await ClientApi.get("/post?=_id" + postId)
+    const res: any = await ClientApi.delete("/post/" + postId)
     console.log("in delete Post post Api" + res.status)
 
     if (res.status == 401) {
         console.log("in 401 - getUserPost")
         await AuthModel.refreshToken()
     }
-    return
+    return res
 }
 
 const addPost = async (userJson: any) => {

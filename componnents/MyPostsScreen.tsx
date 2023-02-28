@@ -9,6 +9,7 @@ const ListItem: FC<{ name: String, text: String, image: String, userImage: Strin
     ({ name, text, image, userImage, postId, edit, deletePost }) => {
         const onDeleteCallback = async () => {
             try {
+                console.log("delete try")
                 const res = await PostModel.deletePost(postId)
                 deletePost()
             } catch (err) {

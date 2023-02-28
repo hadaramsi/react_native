@@ -69,6 +69,7 @@ const deletePost = async (postId: String) => {
 
     try {
         const res = PostApi.deletePost(postId)
+        return res
     } catch (err) {
         console.log("add post fail: " + err)
     }

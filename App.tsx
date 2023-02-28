@@ -7,13 +7,13 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import LoginScreen from './componnents/LoginSrceen'
 import RegisterScreen from './componnents/RegisterScreen'
 import PostsList from './componnents/postsList'
-import MyPostsScreen from './screens/MyPostsScreen'
+import MyPostsScreen from './componnents/MyPostsScreen'
 import ChatScreen from './screens/ChatScreen'
 import MyProfileScreen from './componnents/MyProfileScreen'
 import PostAdd from './componnents/PostAdd';
 import apiClient from './api/ClientApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import MyPostsList from './screens/MyPostsScreen';
+import MyPostsList from './componnents/MyPostsScreen';
 import PostEdit from './componnents/PostEdit';
 
 const Tab = createBottomTabNavigator()
