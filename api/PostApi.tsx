@@ -16,14 +16,33 @@ const getAllPosts = async () => {
 const getUserPost = async (userId: String) => {
     // return apiClient.get("/post")
     const res: any = await ClientApi.get("/post?sender=" + userId)
-    console.log("in getUserPost" + res.status);
+    console.log("in getUserPost" + res.status)
 
     if (res.status == 401) {
-        console.log("in 401 - getUserPost");
-        await AuthModel.refreshToken();
-        return ClientApi.get("/post");
+        console.log("in 401 - getUserPost")
+        await AuthModel.refreshToken()
+        return ClientApi.get("/post")
     }
-    return res;
+    return res
+}
+const getPostById = async (postId: String) => {
+    let res: any = await ClientApi.get("/post/" + postId)
+    if (res.status == 401) {
+        await AuthModel.refreshToken()
+        res = await ClientApi.get("/post/" + postId)
+    }
+    return res.data
+}
+
+const deletePost = async (postId: String) => {
+    const res: any = await ClientApi.get("/post?=_id" + postId)
+    console.log("in delete Post post Api" + res.status)
+
+    if (res.status == 401) {
+        console.log("in 401 - getUserPost")
+        await AuthModel.refreshToken()
+    }
+    return
 }
 
 const addPost = async (userJson: any) => {
@@ -44,4 +63,4 @@ const uploadImage = async (image: any) => {
 
 }
 
-export default { getAllPosts, addPost, uploadImage, getUserPost }
+export default { getAllPosts, addPost, uploadImage, getUserPost, deletePost, getPostById }

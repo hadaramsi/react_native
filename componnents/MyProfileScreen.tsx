@@ -9,49 +9,27 @@ import {
     ScrollView,
     StatusBar
 } from 'react-native'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { AntDesign } from '@expo/vector-icons'
 import UserModel from '../model/UserModel'
 import * as ImagePicker from 'expo-image-picker'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import PostModel from '../model/PostModel';
 
 const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
-    // console.log("route.params.userId is: " + route.params)
-
-    // const userId = JSON.stringify(route.params.userId)
-
     const [email, setEmail] = useState("")
-    const [password, setPassword] = useState("")
+    const [password, setPassword] = useState("******")
     const [fullName, setFullName] = useState("")
     const [imageUrl, setImageUrl] = useState("url")
-    // const [avatarUri, setAvatarImage] = useState("")
-    const onMyProfileCallback = async () => {
-        const user = {
-            email: email,
-            password: password,
-            fullName: fullName,
-            imageUrl: imageUrl
-        }
-        try {
 
-
-        } catch (err) {
-            console.log("fail register user: " + err)
-        }
-        navigation.goBack()
-    }
     const getDetails = async () => {
         const userID = await AsyncStorage.getItem("userId")
         if (userID != null) {
             const user: any = await UserModel.getUserById(userID)
-            console.log("user.email is : " + user.email)
             setEmail(user.email)
             setFullName(user.fullName)
             setImageUrl(user.image)
         }
     }
-
     const askPermission = async () => {
         try {
             const res = await ImagePicker.getCameraPermissionsAsync()
@@ -63,7 +41,6 @@ const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigatio
         }
     }
     React.useEffect(() => {
-
         askPermission()
         getDetails()
     }, [])
@@ -93,6 +70,29 @@ const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigatio
             console.log("open camera error:" + err)
         }
     }
+    const onSaveCallback = async () => {
+        try {
+            let data
+            if (password == "******") {
+                data = { fullName: fullName, image: imageUrl, email: email }
+            } else {
+                data = { fullName: fullName, image: imageUrl, email: email, password: password }
+            }
+            if (imageUrl != "") {
+                const url = await PostModel.uploadImage(imageUrl)
+                data.image = url
+            }
+            const userId = await AsyncStorage.getItem("userId")
+            if (userId != null) {
+                console.log("user Id: -----------------" + userId)
+
+                await UserModel.putUserById(userId, data)
+            }
+        } catch (err) {
+            console.log("fail save changes")
+        }
+        navigation.goBack()
+    }
     return (
         <ScrollView>
             <View style={styles.container}>
@@ -101,18 +101,20 @@ const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigatio
                     style={styles.input}
                     value={email}
                     editable={false}
+                    onChangeText={setEmail}
                 />
                 <TextInput
                     style={styles.input}
-                    onChangeText={setEmail}
-                    value={'******'}
+                    onChangeText={setPassword}
+                    value={password}
                 />
                 <TextInput
                     style={styles.input}
-                    onChangeText={setEmail}
+                    onChangeText={setFullName}
                     value={fullName}
                 />
-                <Image source={{ uri: imageUrl }} style={styles.avatar}></Image>
+                {imageUrl == "url" && <Image style={styles.avatar} source={require('../assets/avatar.png')} />}
+                {imageUrl != "url" && <Image style={styles.avatar} source={{ uri: imageUrl.toString() }} />}
                 <View>
                     <TouchableOpacity onPress={openCamera} >
                         <Ionicons name={'camera'} style={styles.cameraButton} size={50} />
@@ -121,7 +123,7 @@ const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigatio
                         <Ionicons name={'image'} style={styles.galleryButton} size={50} />
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity onPress={onMyProfileCallback} style={styles.button}>
+                <TouchableOpacity onPress={onSaveCallback} style={styles.button}>
                     <Text style={styles.buttonText}>Save</Text>
                 </TouchableOpacity>
             </View>

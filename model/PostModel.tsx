@@ -64,6 +64,19 @@ const addPost = async (post: any) => {
         console.log("add post fail: " + err)
     }
 }
+const deletePost = async (postId: String) => {
+    console.log("delete post")
+
+    try {
+        const res = PostApi.deletePost(postId)
+    } catch (err) {
+        console.log("add post fail: " + err)
+    }
+}
+const getPostById = async (postId: String) => {
+    const res = await PostApi.getPostById(postId)
+    return res
+}
 
 const uploadImage = async (imageURI: String) => {
     var body = new FormData();
@@ -84,4 +97,4 @@ const uploadImage = async (imageURI: String) => {
     }
     return ""
 }
-export default { getAllPosts, addPost, getUserPosts, uploadImage }
+export default { getAllPosts, addPost, getUserPosts, uploadImage, deletePost, getPostById }

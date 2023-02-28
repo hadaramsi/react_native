@@ -11,11 +11,11 @@ const getUserById = async (userId: String) => {
     return res.data
 }
 
-const putUserById = async (userId: String, userDetails: any) => {
-    let res: any = await ClientApi.put("/user/" + userId, userDetails)
+const putUserById = async (userId: String, data: any) => {
+    let res: any = await ClientApi.put("/user/" + userId, data)
     if (res.status == 401) {
         await AuthModel.refreshToken()
-        res = await ClientApi.put("/user/" + userId, userDetails)
+        res = await ClientApi.put("/user/" + userId, data)
     }
     return res.data
 }

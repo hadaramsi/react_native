@@ -5,21 +5,21 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 
 import PostModel, { Post } from '../model/PostModel'
 
-const ListItem: FC<{ name: String, text: String, image: String, userImage: String }> =
-    ({ name, text, image, userImage }) => {
+const ListItem: FC<{ name: String, text: String, image: String, userImage: String, postId: String, edit: any, deletePost: any }> =
+    ({ name, text, image, userImage, postId, edit, deletePost }) => {
         const onDeleteCallback = async () => {
             try {
-
+                const res = await PostModel.deletePost(postId)
+                deletePost()
             } catch (err) {
-                console.log("fail register user: " + err)
+                console.log("fail to open edit post screen")
             }
         }
         const onEditCallback = async () => {
-
             try {
-
+                edit(postId)
             } catch (err) {
-                console.log("fail register user: " + err)
+                console.log("fail to open edit post screen")
             }
         }
         return (
@@ -52,53 +52,42 @@ const ListItem: FC<{ name: String, text: String, image: String, userImage: Strin
 const MyPostsList: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
 
     const [posts, setPosts] = useState<Array<Post>>();
-
+    const onEditScreen = async (postId: String) => {
+        navigation.navigate("PostEdit", { postId: postId })
+    }
+    const RefreshList = async () => {
+        let posts: Post[] = []
+        try {
+            const userId = await AsyncStorage.getItem("userId")
+            if (!userId) {
+                console.log("fail fetching my posts ")
+                return
+            }
+            posts = await PostModel.getUserPosts(userId)
+        } catch (err) {
+            console.log("fail fetching students " + err)
+        }
+        console.log("fetching finish")
+        setPosts(posts)
+    }
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
-            let posts: Post[] = []
-            try {
-                const userId = await AsyncStorage.getItem("userId")
-                if (!userId) {
-                    console.log("fail fetching my posts ")
-                    return
-                }
-                posts = await PostModel.getUserPosts(userId)
-            } catch (err) {
-                console.log("fail fetching students " + err)
-            }
-            console.log("fetching finish")
-            setPosts(posts)
+            RefreshList()
         })
         return unsubscribe
     })
-
-    const onDeleteCallback = async () => {
-        try {
-
-        } catch (err) {
-            console.log("fail register user: " + err)
-        }
-    }
-    const onEditCallback = async () => {
-
-        try {
-
-        } catch (err) {
-            console.log("fail register user: " + err)
-        }
-    }
     return (
         <FlatList style={styles.flatlist}
             data={posts}
             keyExtractor={post => post.id.toString()}
             renderItem={({ item }) => (
-                <ListItem name={item.sender} text={item.message} image={item.imageUrl} userImage={item.userImageUrl} />
+                <ListItem name={item.sender} text={item.message} image={item.imageUrl} userImage={item.userImageUrl}
+                    postId={item.id} edit={onEditScreen} deletePost={RefreshList} />
             )}
         >
         </FlatList>
     )
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -168,78 +157,11 @@ const styles = StyleSheet.create({
     listRowId: {
         fontSize: 25
     }
-    // container: {
-    //     marginTop: StatusBar.currentHeight,
-    //     flex: 1,
-    //     backgroundColor: 'grey',
-    //     alignSelf: 'center',
 
-    // },
-    // flatlist: {
-    //     flex: 1,
-    // },
-    // list: {
-    //     margin: 4,
-    //     flex: 1,
-    //     elevation: 1,
-    //     borderRadius: 2,
-    // },
-    // listRow: {
-    //     margin: 4,
-    //     flexDirection: "row",
-    //     height: 50,
-    //     elevation: 1,
-    //     borderRadius: 2,
-
-    // },
-    // button: {
-    //     position: 'absolute',
-    //     bottom: -10,
-    //     left: 10,
-    //     width: 50,
-    //     height: 50,
-    // },
-    // listRowImage: {
-    //     margin: 10,
-    //     resizeMode: "contain",
-    //     height: 80,
-    //     width: 50,
-    //     alignSelf: 'center',
-    // },
-    // listRowTextContainer: {
-    //     flex: 1,
-    //     margin: 10,
-    //     justifyContent: "space-around"
-
-    // },
-    // listRowName: {
-    //     fontSize: 20,
-    //     alignSelf: 'center',
-
-    // },
-    // name: {
-    //     fontSize: 8,
-    //     marginTop: 10,
-    // },
-    // textPost: {
-    //     fontSize: 10,
-    //     margin: 4,
-    //     alignSelf: 'center',
-
-    // },
-    // icon: {
-    //     flexDirection: "row",
-    // },
-    // listRowId: {
-    //     fontSize: 25
-    // },
-    // userImg: {
-    //     margin: 8,
-    //     resizeMode: "contain",
-    //     height: 30,
-    //     width: 30,
-    //     borderRadius: 30,
-    // },
-});
+})
 
 export default MyPostsList
+
+function deletePost() {
+    throw new Error('Function not implemented.');
+}

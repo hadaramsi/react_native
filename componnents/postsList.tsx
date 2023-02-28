@@ -99,13 +99,13 @@ const styles = StyleSheet.create({
         justifyContent: "space-around"
     },
     listRowName: {
-        fontSize: 30
+        fontSize: 40
     },
     userImg: {
         margin: 8,
         resizeMode: "contain",
-        height: 30,
-        width: 30,
+        height: 35,
+        width: 35,
         borderRadius: 30,
     },
     name: {
@@ -113,7 +113,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     textPost: {
-        fontSize: 15,
+        fontSize: 20,
         margin: 4,
     },
     listRowId: {

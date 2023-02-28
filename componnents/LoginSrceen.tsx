@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC, useState } from 'react'
 import {
     View,
     Text,
@@ -6,11 +6,9 @@ import {
     StyleSheet,
     TouchableOpacity,
 } from 'react-native'
-import { MaterialCommunityIcons } from '@expo/vector-icons'
-import { AntDesign } from '@expo/vector-icons'
-import AuthModel, { Login } from '../model/AuthModel'
+import AuthModel from '../model/AuthModel'
 import ClientApi from '../api/ClientApi'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const LoginScreen: FC<{ route: any, navigation: any, setTokenFunction: any }> = ({ route, navigation, setTokenFunction }) => {
     const [email, setEmail] = useState("")
@@ -45,7 +43,14 @@ const LoginScreen: FC<{ route: any, navigation: any, setTokenFunction: any }> = 
     }
     const onRegisterCallback = () => {
         navigation.navigate("RegisterScreen")
+
     }
+    React.useEffect(() => {
+        const subscribe = navigation.addListener("focus", async () => {
+            setEmail("")
+            setPassword("")
+        })
+    }, [])
     return (
         <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Text style={styles.text}>Welcome!</Text>

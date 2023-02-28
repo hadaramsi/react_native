@@ -14,6 +14,7 @@ import PostAdd from './componnents/PostAdd';
 import apiClient from './api/ClientApi';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import MyPostsList from './screens/MyPostsScreen';
+import PostEdit from './componnents/PostEdit';
 
 const Tab = createBottomTabNavigator()
 
@@ -52,7 +53,7 @@ const MyPostsStackCp: FC<{ route: any, navigation: any }> = ({ route, navigation
           </TouchableOpacity>
         ),
       }} />
-      <MyPostsStack.Screen name='PostAdd' component={PostAdd} />
+      <MyPostsStack.Screen name='PostEdit' component={PostEdit} />
     </MyPostsStack.Navigator>
 
   )
