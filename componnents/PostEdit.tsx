@@ -60,29 +60,23 @@ const PostEdit: FC<{ route: any, navigation: any }> = ({ route, navigation }) =>
     }
 
     const onSaveCallback = async () => {
-        console.log("save button was pressed")
-        const post = {
-            message: text,
-            imageUrl: "",
-        }
         try {
+            let data
+            data = { text: text, imageUri: imageUri }
             if (imageUri != "") {
-                console.log("uploading image")
                 const url = await PostModel.uploadImage(imageUri)
-                post.imageUrl = url
-                console.log("got url from upload: " + url)
+                data.imageUri = url
             }
-            console.log("saving post")
-            await PostModel.addPost(post)
+            const postId = await AsyncStorage.getItem("postId")
+            if (postId != null) {
+                await PostModel.putPostById(postId, data)
+            }
         } catch (err) {
-            console.log("fail adding post: " + err)
+            console.log("fail save changes")
         }
         navigation.goBack()
     }
 
-    const onCancellCallback = () => {
-        navigation.goBack()
-    }
     return (
         <ScrollView>
             <View style={styles.container}>

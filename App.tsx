@@ -47,10 +47,17 @@ const MyPostsStackCp: FC<{ route: any, navigation: any }> = ({ route, navigation
     <MyPostsStack.Navigator>
       <MyPostsStack.Screen name="My posts List" component={MyPostsList} options={{
         headerRight: () => (
-          <TouchableOpacity
-            onPress={addNewPost}>
-            <Ionicons name={'add-outline'} size={40} color={'gray'} />
-          </TouchableOpacity>
+          <View style={styles.row}>
+            <TouchableOpacity
+              onPress={addNewPost}>
+              <Ionicons name={'add-outline'} size={40} color={'gray'} />
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={addNewPost}>
+              <Ionicons name={'log-out-outline'} size={40} color={'gray'} />
+            </TouchableOpacity>
+          </View>
+
         ),
       }} />
       <MyPostsStack.Screen name='PostEdit' component={PostEdit} />
@@ -58,18 +65,27 @@ const MyPostsStackCp: FC<{ route: any, navigation: any }> = ({ route, navigation
 
   )
 }
-const updateToken = async (setToken: any) => {
+const logout = async () => {
+  await AsyncStorage.clear()
+  setTokenC(null)
+  updateToken()
+}
+
+let setTokenC: any
+const updateToken = async () => {
   const token = await AsyncStorage.getItem("accessToken")
   // await AsyncStorage.clear()
   if (token != null) {
     apiClient.setHeader("Authorization", "JWT " + token)
-    return setToken(token)
+    return setTokenC(token)
   }
 }
+
 const App: FC = () => {
   const Stack = createNativeStackNavigator()
   const [token, setToken] = useState()
-  updateToken(setToken)
+  setTokenC = setToken
+  updateToken()
   if (!token) {
     return (
       <NavigationContainer>
@@ -105,6 +121,11 @@ const App: FC = () => {
           }
           return <Ionicons name={iconName} size={size} color={color} />
         },
+        headerRight: () => (
+          <TouchableOpacity onPress={logout} style={{ margin: 3 }}>
+            <Ionicons name={"power-outline"} size={40} color={"black"} />
+          </TouchableOpacity>
+        ),
         tabBarActiveTintColor: 'tomato',
         tabBarInactiveTintColor: 'gray',
       })}>
@@ -127,6 +148,9 @@ const styles = StyleSheet.create({
     marginTop: StatusBar.currentHeight,
     flex: 1,
     backgroundColor: 'grey',
+  },
+  row: {
+    flexDirection: "row",
   },
 
 });

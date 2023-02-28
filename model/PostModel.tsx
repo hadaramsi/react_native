@@ -77,6 +77,10 @@ const getPostById = async (postId: String) => {
     const res = await PostApi.getPostById(postId)
     return res
 }
+const putPostById = async (postId: String, data: any) => {
+    const res = await PostApi.putPostById(postId, data)
+    return res
+}
 
 const uploadImage = async (imageURI: String) => {
     var body = new FormData();
@@ -97,4 +101,4 @@ const uploadImage = async (imageURI: String) => {
     }
     return ""
 }
-export default { getAllPosts, addPost, getUserPosts, uploadImage, deletePost, getPostById }
+export default { getAllPosts, addPost, getUserPosts, uploadImage, deletePost, getPostById, putPostById }

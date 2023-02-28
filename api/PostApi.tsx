@@ -62,5 +62,13 @@ const uploadImage = async (image: any) => {
     return ClientApi.post("/file/file", image)
 
 }
+const putPostById = async (postId: String, data: any) => {
+    let res: any = await ClientApi.put("/post/" + postId, data)
+    if (res.status == 401) {
+        await AuthModel.refreshToken()
+        res = await ClientApi.put("/post/" + postId, data)
+    }
+    return res.data
+}
 
-export default { getAllPosts, addPost, uploadImage, getUserPost, deletePost, getPostById }
+export default { getAllPosts, addPost, uploadImage, getUserPost, deletePost, getPostById, putPostById }

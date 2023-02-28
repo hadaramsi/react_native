@@ -5,9 +5,9 @@ const getUserById = async (userId: String) => {
     return res
 }
 
-const putUserById = async (userId: String, userDetails: any) => {
+const putUserById = async (userId: String, data: any) => {
     console.log("in put model")
-    const res = await UserApi.putUserById(userId, userDetails)
+    const res = await UserApi.putUserById(userId, data)
     return res
 }
 

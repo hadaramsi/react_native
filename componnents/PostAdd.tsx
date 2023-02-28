@@ -57,6 +57,9 @@ const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
             imageUrl: "",
         }
         try {
+            if (text == "" || imageUri == "") {
+                return
+            }
             if (imageUri != "") {
                 console.log("uploading image")
                 const url = await PostModel.uploadImage(imageUri)

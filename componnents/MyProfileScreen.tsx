@@ -72,6 +72,7 @@ const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigatio
             console.log("open camera error:" + err)
         }
     }
+
     const onSaveCallback = async () => {
         try {
             let data
@@ -125,9 +126,11 @@ const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigatio
                         <Ionicons name={'image'} style={styles.galleryButton} size={50} />
                     </TouchableOpacity>
                 </View>
+
                 <TouchableOpacity onPress={onSaveCallback} style={styles.button}>
                     <Text style={styles.buttonText}>Save</Text>
                 </TouchableOpacity>
+
             </View>
         </ScrollView >
     )
@@ -145,7 +148,7 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     button: {
-        width: 200,
+        width: 160,
         height: 50,
         margin: 12,
         padding: 12,
