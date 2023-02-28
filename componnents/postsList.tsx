@@ -7,13 +7,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ListItem: FC<{ name: String, text: String, image: String, userImage: String }> =
     ({ name, text, image, userImage }) => {
-
-        console.log("userImage11111111111111111111111111111111111")
-        console.log(userImage)
-
-        console.log("postImage55555555555555555555555555555555555")
-        console.log(image)
-
         return (
             <TouchableHighlight underlayColor={'gainsboro'}>
                 <View style={styles.list}>

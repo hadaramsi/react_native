@@ -54,7 +54,7 @@ const MyPostsStackCp: FC<{ route: any, navigation: any }> = ({ route, navigation
             </TouchableOpacity>
             <TouchableOpacity
               onPress={addNewPost}>
-              <Ionicons name={'log-out-outline'} size={40} color={'gray'} />
+              <Ionicons name={'power-outline'} size={40} color={'gray'} />
             </TouchableOpacity>
           </View>
 

@@ -6,7 +6,6 @@ import * as ImagePicker from 'expo-image-picker'
 import React from "react"
 
 const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
-    console.log("My app is running")
     const [text, setPostText] = useState("")
     const [imageUri, setImageUri] = useState("")
 
@@ -20,7 +19,7 @@ const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
             console.log("ask permission error " + err)
         }
     }
-    React.useEffect(() => {
+    useEffect(() => {
         askPermission()
     }, [])
 

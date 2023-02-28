@@ -61,13 +61,11 @@ const PostEdit: FC<{ route: any, navigation: any }> = ({ route, navigation }) =>
 
     const onSaveCallback = async () => {
         try {
-            let data
-            data = { text: text, imageUri: imageUri }
+            let data: any = { message: text, imageUrl: imageUri }
             if (imageUri != "") {
                 const url = await PostModel.uploadImage(imageUri)
                 data.imageUri = url
             }
-            const postId = await AsyncStorage.getItem("postId")
             if (postId != null) {
                 await PostModel.putPostById(postId, data)
             }
