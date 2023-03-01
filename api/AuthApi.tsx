@@ -16,5 +16,8 @@ const refresh = async () => {
 const uploadImage = async (image: any) => {
     return apiClient.post("/file/file", image)
 }
+const logout = async () => {
+    return apiClient.get("/auth/logout")
+}
 
-export default { login, register, refresh, uploadImage }
+export default { login, register, refresh, uploadImage, logout }

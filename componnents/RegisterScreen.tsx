@@ -75,6 +75,8 @@ const RegisterScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
                 }
 
                 let res = await AuthModel.RegisterUser(register)
+                console.log("000000000000")
+                console.log(res)
                 if (res == null) {
                     setPb(false)
                     setError(true)
