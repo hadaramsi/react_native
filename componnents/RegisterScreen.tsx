@@ -6,7 +6,7 @@ import {
     StyleSheet,
     TouchableOpacity,
     Image,
-    ScrollView
+    ScrollView, ActivityIndicator
 } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -19,7 +19,8 @@ const RegisterScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
     const [password, setPassword] = useState("")
     const [fullName, setFullName] = useState("")
     const [imageUrl, setImageUrl] = useState("")
-    // const [avatarUri, setAvatarImage] = useState("")
+    const [pb, setPb] = useState(true)
+
     const onRegisterCallback = async () => {
         const register = {
             email: email,
@@ -37,6 +38,7 @@ const RegisterScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
                 }
                 await AuthModel.RegisterUser(register)
             }
+            setPb(false)
         } catch (err) {
             console.log("fail register user: " + err)
         }
@@ -112,6 +114,8 @@ const RegisterScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
                         <Ionicons name={"logo-google"} size={50} color="gray" />
                     </TouchableOpacity>
                 </View>
+                <ActivityIndicator size={100} color="#00ff00" animating={pb} />
+
 
                 <TouchableOpacity onPress={onRegisterCallback} style={styles.button}>
                     <Text style={styles.buttonText}>Register</Text>

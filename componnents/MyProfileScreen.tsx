@@ -1,14 +1,5 @@
 import React, { FC, useState } from 'react';
-import {
-    View,
-    Text,
-    TextInput,
-    StyleSheet,
-    TouchableOpacity,
-    Image,
-    ScrollView,
-    StatusBar
-} from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, StatusBar, ActivityIndicator } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import UserModel from '../model/UserModel'
 import * as ImagePicker from 'expo-image-picker'
@@ -20,6 +11,7 @@ const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigatio
     const [password, setPassword] = useState("******")
     const [fullName, setFullName] = useState("")
     const [imageUrl, setImageUrl] = useState("")
+    const [pb, setPb] = useState(true)
 
     const getDetails = async () => {
         const userID = await AsyncStorage.getItem("userId")
@@ -28,9 +20,8 @@ const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigatio
             setEmail(user.email)
             setFullName(user.fullName)
             setImageUrl(user.image)
-            console.log("imageUrl000000000000000000000000000000000")
-            console.log(imageUrl)
         }
+        setPb(false)
     }
     const askPermission = async () => {
         try {
@@ -126,6 +117,7 @@ const MyProfileScreen: FC<{ route: any, navigation: any }> = ({ route, navigatio
                         <Ionicons name={'image'} style={styles.galleryButton} size={50} />
                     </TouchableOpacity>
                 </View>
+                <ActivityIndicator style={styles.pb} size={100} color="#00ff00" animating={pb} />
 
                 <TouchableOpacity onPress={onSaveCallback} style={styles.button}>
                     <Text style={styles.buttonText}>Save</Text>
@@ -141,6 +133,10 @@ const styles = StyleSheet.create({
         margin: 2,
         fontSize: 30,
         alignSelf: 'center',
+    },
+    pb: {
+        alignSelf: 'center',
+        position: 'absolute'
     },
     buttonText: {
         fontSize: 20,

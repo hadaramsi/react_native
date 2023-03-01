@@ -33,7 +33,7 @@ const PostsStackCp: FC<{ route: any, navigation: any }> = ({ route, navigation }
           </TouchableOpacity>
         ),
       }} />
-      <PostsStack.Screen name='Add Post' component={PostAdd} />
+      <PostsStack.Screen name='PostAdd' component={PostAdd} />
     </PostsStack.Navigator>
 
   )
@@ -60,7 +60,7 @@ const MyPostsStackCp: FC<{ route: any, navigation: any }> = ({ route, navigation
 
         ),
       }} />
-      <MyPostsStack.Screen name='Edit Post' component={PostEdit} />
+      <MyPostsStack.Screen name='PostEdit' component={PostEdit} />
     </MyPostsStack.Navigator>
 
   )
@@ -90,7 +90,7 @@ const App: FC = () => {
     return (
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="Login">
+          <Stack.Screen name="LoginScreen">
             {(props) => (
               <LoginScreen
                 route={props.route}
@@ -99,7 +99,7 @@ const App: FC = () => {
               />
             )}
           </Stack.Screen>
-          <Stack.Screen name="Register" component={RegisterScreen} />
+          <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
         </Stack.Navigator>
 
       </NavigationContainer>

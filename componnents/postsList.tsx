@@ -1,5 +1,5 @@
 import React, { FC, useState, useEffect } from 'react'
-import { StatusBar, StyleSheet, Text, View, Image, FlatList, ProgressBarAndroidBase, TouchableHighlight } from 'react-native'
+import { StatusBar, StyleSheet, Text, View, Image, ActivityIndicator, FlatList, TouchableHighlight } from 'react-native'
 import PostModel, { Post } from '../model/PostModel'
 
 const ListItem: FC<{ name: String, text: String, image: String, userImage: String }> =
@@ -17,15 +17,15 @@ const ListItem: FC<{ name: String, text: String, image: String, userImage: Strin
                         {image == "" && <Image style={styles.listRowImage} source={require('../assets/avatar.png')} />}
                         {image != "" && <Image style={styles.listRowImage} source={{ uri: image.toString() }} />}
                     </View>
-                    {/* <ProgressBarAndroidBase styleAttr="Horizontal" indeterminate={true} progress={0.5} /> */}
-
                 </View>
             </TouchableHighlight>
         )
     }
 
 const PostsList: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
-    const [posts, setPosts] = useState<Array<Post>>();
+    const [posts, setPosts] = useState<Array<Post>>()
+    const [pb, setPb] = useState(true)
+
 
     useEffect(() => {
         const unsubscribe = navigation.addListener('focus', async () => {
@@ -37,26 +37,33 @@ const PostsList: FC<{ route: any, navigation: any }> = ({ route, navigation }) =
             }
             console.log("fetching finish")
             setPosts(posts)
+            setPb(false)
         })
         return unsubscribe
     })
 
 
     return (
-        <FlatList style={styles.flatlist}
-            data={posts}
-            keyExtractor={post => post.id.toString()}
-            renderItem={({ item }) => (
-                <ListItem name={item.sender} text={item.message} image={item.imageUrl} userImage={item.userImageUrl} />
-            )}
-        >
-        </FlatList>
+        <View style={styles.flatlist}>
+            <FlatList style={styles.flatlist}
+                data={posts}
+                keyExtractor={post => post.id.toString()}
+                renderItem={({ item }) => (
+                    <ListItem name={item.sender} text={item.message} image={item.imageUrl} userImage={item.userImageUrl} />
 
+                )}
+            >
+            </FlatList>
+            <ActivityIndicator style={styles.pb} size={100} color="#00ff00" animating={pb} />
+        </View>
     )
 }
 
-
 const styles = StyleSheet.create({
+    pb: {
+        alignSelf: 'center',
+        position: 'absolute'
+    },
     container: {
         marginTop: StatusBar.currentHeight,
         flex: 1,

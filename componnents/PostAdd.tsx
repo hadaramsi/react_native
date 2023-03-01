@@ -1,5 +1,5 @@
 import { useState, FC, useEffect } from 'react'
-import { StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, ScrollView } from 'react-native';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator, TextInput, ScrollView } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons'
 import PostModel, { Post } from '../model/PostModel'
 import * as ImagePicker from 'expo-image-picker'
@@ -8,6 +8,7 @@ import React from "react"
 const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
     const [text, setPostText] = useState("")
     const [imageUri, setImageUri] = useState("")
+    const [pb, setPb] = useState(false)
 
     const askPermission = async () => {
         try {
@@ -50,6 +51,7 @@ const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
     }
 
     const onSaveCallback = async () => {
+
         console.log("save button was pressed")
         const post = {
             message: text,
@@ -59,6 +61,8 @@ const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
             if (text == "" || imageUri == "") {
                 return
             }
+            setPb(true)
+
             if (imageUri != "") {
                 console.log("uploading image")
                 const url = await PostModel.uploadImage(imageUri)
@@ -67,6 +71,8 @@ const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
             }
             console.log("saving post")
             await PostModel.addPost(post)
+            setPb(false)
+
         } catch (err) {
             console.log("fail adding post: " + err)
         }
@@ -96,6 +102,8 @@ const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
                     value={text}
                     placeholder={'text'}
                 />
+                <ActivityIndicator style={styles.pb} size={100} color="#00ff00" animating={pb} />
+
                 <View style={styles.buttonesContainer}>
                     <TouchableOpacity onPress={onCancellCallback} style={styles.button}>
                         <Text style={styles.buttonText}>CANCELL</Text>
@@ -111,6 +119,10 @@ const PostAdd: FC<{ route: any, navigation: any }> = ({ route, navigation }) => 
 
 
 const styles = StyleSheet.create({
+    pb: {
+        alignSelf: 'center',
+        position: 'absolute'
+    },
     container: {
         flex: 1,
     },
@@ -148,7 +160,7 @@ const styles = StyleSheet.create({
         flex: 1,
         margin: 12,
         padding: 12,
-        backgroundColor: 'salmon',
+        backgroundColor: 'tomato',
         borderRadius: 10,
     },
     buttonText: {

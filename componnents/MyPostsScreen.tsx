@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, { FC, useState, useEffect } from 'react';
-import { StatusBar, StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, FlatList, TouchableHighlight } from 'react-native';
+import { StatusBar, StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator, FlatList, TouchableHighlight } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons'
 
 import PostModel, { Post } from '../model/PostModel'
@@ -31,10 +31,10 @@ const ListItem: FC<{ name: String, text: String, image: String, userImage: Strin
                         {userImage != "" && <Image style={styles.userImg} source={{ uri: userImage.toString() }} />}
                         <Text style={styles.name}>{name}</Text>
                         <TouchableOpacity onPress={onDeleteCallback} style={styles.deleteButton} >
-                            <Ionicons name={"trash-bin"} size={30} color='coral' />
+                            <Ionicons name={"trash-bin"} size={30} color='tomato' />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={onEditCallback} style={styles.editButton}>
-                            <Ionicons name={"build"} size={30} color='coral' />
+                            <Ionicons name={"build"} size={30} color='tomato' />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.listRowTextContainer}>
@@ -52,7 +52,9 @@ const ListItem: FC<{ name: String, text: String, image: String, userImage: Strin
 
 const MyPostsList: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
 
-    const [posts, setPosts] = useState<Array<Post>>();
+    const [posts, setPosts] = useState<Array<Post>>()
+    const [pb, setPb] = useState(true)
+
     const onEditScreen = async (postId: String) => {
         navigation.navigate("PostEdit", { postId: postId })
     }
@@ -65,6 +67,7 @@ const MyPostsList: FC<{ route: any, navigation: any }> = ({ route, navigation })
                 return
             }
             posts = await PostModel.getUserPosts(userId)
+            setPb(false)
         } catch (err) {
             console.log("fail fetching students " + err)
         }
@@ -78,32 +81,28 @@ const MyPostsList: FC<{ route: any, navigation: any }> = ({ route, navigation })
         return unsubscribe
     })
     return (
-        <FlatList style={styles.flatlist}
-            data={posts}
-            keyExtractor={post => post.id.toString()}
-            renderItem={({ item }) => (
-                <ListItem name={item.sender} text={item.message} image={item.imageUrl} userImage={item.userImageUrl}
-                    postId={item.id} edit={onEditScreen} deletePost={RefreshList} />
-            )}
-        >
-        </FlatList>
+        <View style={styles.flatlist}>
+            <ActivityIndicator style={styles.pb} size={100} color="#00ff00" animating={pb} />
+
+            <FlatList style={styles.flatlist}
+                data={posts}
+                keyExtractor={post => post.id.toString()}
+                renderItem={({ item }) => (
+                    <ListItem name={item.sender} text={item.message} image={item.imageUrl} userImage={item.userImageUrl}
+                        postId={item.id} edit={onEditScreen} deletePost={RefreshList} />
+                )}
+            >
+            </FlatList>
+
+
+        </View>
     )
 }
 
 const styles = StyleSheet.create({
-    container: {
-        marginTop: StatusBar.currentHeight,
-        flex: 1,
-        backgroundColor: 'grey',
-    },
-    flatlist: {
-        flex: 1,
-    },
-    list: {
-        margin: 4,
-        flex: 1,
-        elevation: 1,
-        borderRadius: 2,
+    pb: {
+        alignSelf: 'center',
+        position: 'absolute'
     },
     deleteButton: {
         position: 'absolute',
@@ -119,6 +118,20 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
     },
+    container: {
+        marginTop: StatusBar.currentHeight,
+        flex: 1,
+        backgroundColor: 'grey',
+    },
+    flatlist: {
+        flex: 1,
+    },
+    list: {
+        margin: 4,
+        flex: 1,
+        elevation: 1,
+        borderRadius: 2,
+    },
     listRowPosted: {
         margin: 4,
         flexDirection: "row",
@@ -127,33 +140,36 @@ const styles = StyleSheet.create({
         borderRadius: 2,
     },
     listRowImage: {
-        margin: 10,
-        resizeMode: "contain",
-        height: 130,
-        width: 130,
+        margin: 4,
+        // flex: 1,
+        // resizeMode: "contain",
+        height: 280,
+        width: 390,
     },
     listRowTextContainer: {
         flex: 1,
-        margin: 10,
-        justifyContent: "space-around"
+        margin: 2,
+        // justifyContent: "space-around"
     },
     listRowName: {
-        fontSize: 30
+        fontSize: 40
     },
     userImg: {
         margin: 8,
         resizeMode: "contain",
-        height: 40,
-        width: 40,
+        height: 35,
+        width: 35,
         borderRadius: 30,
     },
     name: {
         fontSize: 20,
         marginTop: 10,
+        fontWeight: 'bold'
     },
     textPost: {
         fontSize: 20,
         margin: 4,
+        // fontWeight: 'bold'
     },
     listRowId: {
         fontSize: 25

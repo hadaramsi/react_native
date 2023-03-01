@@ -1,6 +1,6 @@
 import React, { FC, useState } from "react"
 import postModel, { Post } from "../model/PostModel"
-import { StyleSheet, Text, View, Image, TouchableOpacity, TextInput, StatusBar, FlatList, TouchableHighlight } from "react-native"
+import { StyleSheet, Text, View, ActivityIndicator, Image, TouchableOpacity, TextInput, StatusBar, FlatList, TouchableHighlight } from "react-native"
 
 import Ionicons from "@expo/vector-icons/Ionicons"
 import Client, { Socket } from "socket.io-client"
@@ -25,15 +25,19 @@ const ListItem: FC<{
                     borderRadius: 3,
                     backgroundColor:
                         senderId == currentUserId ? "moccasin" : "blanchedalmond",
-                    marginRight: senderId == currentUserId ? 0 : 20,
-                    marginLeft: senderId == currentUserId ? 20 : 0,
+                    marginRight: senderId == currentUserId ? 0 : 4,
+                    marginLeft: senderId == currentUserId ? 4 : 0,
                 }}
             >
-                <Text style={styles.userName}>{sender}</Text>
-
-                <View style={styles.listRow}>
+                <View style={styles.listRowUser}>
                     {image == "" && (<Image style={styles.userImage} source={require("../assets/avatar.png")} />)}
                     {image != "" && (<Image style={styles.userImage} source={{ uri: image.toString() }} />)}
+                    <Text style={styles.userName}>{sender}</Text>
+
+                </View>
+                <View style={styles.listRow}>
+                    {/* {image == "" && (<Image style={styles.userImage} source={require("../assets/avatar.png")} />)}
+                    {image != "" && (<Image style={styles.userImage} source={{ uri: image.toString() }} />)} */}
                     <Text style={styles.messageText}>{message}</Text>
                 </View>
             </View>
@@ -44,6 +48,7 @@ const ListItem: FC<{
 const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
     const [messages, setMessages] = useState<Array<Message>>()
     const [newMessage, setNewMessage] = useState("")
+    const [pb, setPb] = useState(true)
 
     const clientSocketConnect = (
         clientSocket: Socket<DefaultEventsMap, DefaultEventsMap>
@@ -72,6 +77,7 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
                 message: newMessage,
             })
         }
+        setPb(false)
     }
 
     const addUsernameToMessages = async (res: any) => {
@@ -105,6 +111,8 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
     }
 
     React.useEffect(() => {
+
+        setPb(false)
         updateUserId()
         const subscribe = navigation.addListener("focus", async () => {
             console.log("focus")
@@ -118,6 +126,7 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
             if (socket != undefined) {
                 fetchMessages(socket)
             }
+
         })
 
         const unsubscribe = navigation.addListener("blur", () => {
@@ -141,7 +150,10 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
                         senderId={item.senderId}
                     />
                 )}
+
             ></FlatList>
+            <ActivityIndicator style={styles.pb} size={100} color="#00ff00" animating={pb} />
+
             <View style={styles.listRow}>
                 <TextInput style={styles.input} onChangeText={setNewMessage} placeholder="send message" value={newMessage} />
                 <TouchableOpacity onPress={sendMessage}>
@@ -153,6 +165,10 @@ const Chat: FC<{ route: any; navigation: any }> = ({ route, navigation }) => {
 }
 
 const styles = StyleSheet.create({
+    pb: {
+        alignSelf: 'center',
+        position: 'absolute'
+    },
     container: {
         marginTop: StatusBar.currentHeight,
         flex: 1,
@@ -162,11 +178,12 @@ const styles = StyleSheet.create({
         flexDirection: "row",
     },
     userImage: {
-        margin: 10,
         resizeMode: "contain",
-        height: 50,
-        width: 50,
+        height: 30,
+        width: 30,
         borderRadius: 30,
+        marginTop: 5,
+
     },
     userName: {
         fontSize: 15,
@@ -176,10 +193,15 @@ const styles = StyleSheet.create({
     },
     messageText: {
         fontSize: 20,
-        marginTop: 10,
-
+        marginTop: 4,
+        marginLeft: 1,
     },
-
+    listRowUser: {
+        margin: 4,
+        flexDirection: "row",
+        height: 40,
+        borderRadius: 2,
+    },
     input: {
         height: 40,
         margin: 12,
@@ -194,7 +216,10 @@ const styles = StyleSheet.create({
     },
     flatlist: {
         flex: 1,
-        marginTop: StatusBar.currentHeight
+        marginTop: StatusBar.currentHeight,
+        marginLeft: 50,
+
+
     },
 })
 
