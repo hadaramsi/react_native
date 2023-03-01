@@ -59,7 +59,11 @@ const RegisterUser = async (register: Register) => {
     }
     try {
         const res: any = await AuthApi.register(data)
+        if (res != 200) {
+            return null
+        }
         return res.data
+
     } catch (err) {
         console.log("fail to register: " + err)
     }

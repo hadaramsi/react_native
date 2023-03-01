@@ -18,7 +18,7 @@ const RegisterScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
     const [pb, setPb] = useState(false)
     const [googleToken, setGoogleToken] = useState("");
     const [userInfo, setUserInfo] = useState(null);
-
+    const [errorMes, setError] = useState(false);
     const [request, response, promptAsync] = Google.useAuthRequest({
         expoClientId: "2489142327-v8o5dq1o34at0of3putjkbeo1cg6j60u.apps.googleusercontent.com"
 
@@ -63,18 +63,30 @@ const RegisterScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
             fullName: fullName,
             imageUrl: imageUrl
         }
+
         try {
-            setPb(true)
             if (email != "" && password != "" && fullName != "") {
+                setPb(true)
                 if (imageUrl != "") {
                     console.log("uploading image")
                     const url = await AuthModel.uploadImage(imageUrl)
                     register.imageUrl = url
                     console.log("got url from upload: " + url)
                 }
-                await AuthModel.RegisterUser(register)
+
+                let res = await AuthModel.RegisterUser(register)
+                if (res == null) {
+                    setPb(false)
+                    setError(true)
+                    return
+                }
+                setPb(false)
             }
-            setPb(false)
+            else {
+                setError(true)
+                return
+            }
+
         } catch (err) {
             console.log("fail register user: " + err)
         }
@@ -83,6 +95,7 @@ const RegisterScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
 
     const onRegisterGoogleCallback = async () => {
         ToastAndroid.show("Google", ToastAndroid.LONG)
+        setUserInfo(null)
         promptAsync()
     }
 
@@ -135,9 +148,12 @@ const RegisterScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
                     value={fullName}
                     placeholder={'Full name'}
                 />
+                {errorMes && (<Text style={{ fontSize: 20, color: "red", alignSelf: "center", }}>Worng input </Text>
+                )}
                 {/* <Text style={styles.textSade}>Uplude image</Text> */}
                 {imageUrl == "" && < Image source={require('../assets/avatar.png')} style={styles.avatar}></Image>}
                 {imageUrl != "" && <Image source={{ uri: imageUrl }} style={styles.avatar}></Image>}
+
                 <View>
                     <TouchableOpacity onPress={openCamera} >
                         <Ionicons name={'camera'} style={styles.cameraButton} size={50} />
@@ -148,9 +164,9 @@ const RegisterScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
                 </View>
                 <Text style={styles.textSade}>Register with:</Text>
                 <View style={styles.icon}>
-                    <TouchableOpacity onPress={onRegisterCallback}>
+                    {/* <TouchableOpacity onPress={onRegisterCallback}>
                         <Ionicons name={"logo-facebook"} size={50} color="blue" />
-                    </TouchableOpacity>
+                    </TouchableOpacity> */}
                     <TouchableOpacity onPress={onRegisterGoogleCallback}>
                         <Ionicons name={"logo-google"} size={50} color="gray" />
                     </TouchableOpacity>
@@ -161,6 +177,7 @@ const RegisterScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
                 <TouchableOpacity onPress={onRegisterCallback} style={styles.button}>
                     <Text style={styles.buttonText}>Register</Text>
                 </TouchableOpacity>
+
             </View>
         </ScrollView >
     )

@@ -24,9 +24,9 @@ const ListItem: FC<{
                     elevation: 1,
                     borderRadius: 3,
                     backgroundColor:
-                        senderId == currentUserId ? "moccasin" : "blanchedalmond",
-                    marginRight: senderId == currentUserId ? 0 : 4,
-                    marginLeft: senderId == currentUserId ? 4 : 0,
+                        senderId == currentUserId ? "lightblue" : "blanchedalmond",
+                    marginRight: senderId == currentUserId ? 40 : 50,
+                    marginLeft: senderId == currentUserId ? 50 : 0,
                 }}
             >
                 <View style={styles.listRowUser}>
@@ -197,7 +197,6 @@ const styles = StyleSheet.create({
         marginLeft: 1,
     },
     listRowUser: {
-        margin: 4,
         flexDirection: "row",
         height: 40,
         borderRadius: 2,
