@@ -1,25 +1,60 @@
-import React, { FC, useState } from 'react';
-import {
-    View,
-    Text,
-    TextInput,
-    StyleSheet,
-    TouchableOpacity,
-    Image,
-    ScrollView, ActivityIndicator
-} from 'react-native'
+import React, { FC, useEffect, useState } from 'react';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Image, ScrollView, ActivityIndicator, ToastAndroid } from 'react-native'
 import { MaterialCommunityIcons } from '@expo/vector-icons'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { AntDesign } from '@expo/vector-icons'
 import AuthModel, { Register } from '../model/AuthModel'
 import * as ImagePicker from 'expo-image-picker'
+import * as WebBrowser from "expo-web-browser";
+import * as Google from "expo-auth-session/providers/google";
+
+WebBrowser.maybeCompleteAuthSession();
 
 const RegisterScreen: FC<{ route: any, navigation: any }> = ({ route, navigation }) => {
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [fullName, setFullName] = useState("")
     const [imageUrl, setImageUrl] = useState("")
-    const [pb, setPb] = useState(true)
+    const [pb, setPb] = useState(false)
+    const [googleToken, setGoogleToken] = useState("");
+    const [userInfo, setUserInfo] = useState(null);
+
+    const [request, response, promptAsync] = Google.useAuthRequest({
+        expoClientId: "2489142327-v8o5dq1o34at0of3putjkbeo1cg6j60u.apps.googleusercontent.com"
+
+    });
+    useEffect(() => {
+        if (response?.type === "success") {
+            if (response.authentication != null) {
+                setGoogleToken(response.authentication.accessToken);
+                getUserInfo();
+            }
+        }
+    }, [response, googleToken]);
+
+    useEffect(() => {
+
+        if (userInfo != null) {
+            const user: any = userInfo
+            setEmail(user.email)
+            setFullName(user.given_name + " " + user.family_name)
+            setImageUrl(user.picture)
+        }
+    }, [userInfo]);
+    const getUserInfo = async () => {
+        try {
+            const response = await fetch(
+                "https://www.googleapis.com/userinfo/v2/me",
+                {
+                    headers: { Authorization: `Bearer ${googleToken}` },
+                }
+            );
+            const user = await response.json();
+            setUserInfo(user);
+        } catch (error) {
+            // Add your own error handler here
+        }
+    }
 
     const onRegisterCallback = async () => {
         const register = {
@@ -29,6 +64,7 @@ const RegisterScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
             imageUrl: imageUrl
         }
         try {
+            setPb(true)
             if (email != "" && password != "" && fullName != "") {
                 if (imageUrl != "") {
                     console.log("uploading image")
@@ -43,6 +79,11 @@ const RegisterScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
             console.log("fail register user: " + err)
         }
         navigation.goBack()
+    }
+
+    const onRegisterGoogleCallback = async () => {
+        ToastAndroid.show("Google", ToastAndroid.LONG)
+        promptAsync()
     }
 
     const openCamera = async () => {
@@ -110,11 +151,11 @@ const RegisterScreen: FC<{ route: any, navigation: any }> = ({ route, navigation
                     <TouchableOpacity onPress={onRegisterCallback}>
                         <Ionicons name={"logo-facebook"} size={50} color="blue" />
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={onRegisterCallback}>
+                    <TouchableOpacity onPress={onRegisterGoogleCallback}>
                         <Ionicons name={"logo-google"} size={50} color="gray" />
                     </TouchableOpacity>
                 </View>
-                <ActivityIndicator size={100} color="#00ff00" animating={pb} />
+                <ActivityIndicator style={styles.pb} size={100} color="#00ff00" animating={pb} />
 
 
                 <TouchableOpacity onPress={onRegisterCallback} style={styles.button}>
@@ -138,6 +179,10 @@ const styles = StyleSheet.create({
     },
     container: {
         flex: 1,
+    },
+    pb: {
+        alignSelf: 'center',
+        position: 'absolute'
     },
     avatar: {
         height: 250,
