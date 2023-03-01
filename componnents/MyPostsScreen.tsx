@@ -31,10 +31,10 @@ const ListItem: FC<{ name: String, text: String, image: String, userImage: Strin
                         {userImage != "" && <Image style={styles.userImg} source={{ uri: userImage.toString() }} />}
                         <Text style={styles.name}>{name}</Text>
                         <TouchableOpacity onPress={onDeleteCallback} style={styles.deleteButton} >
-                            <Ionicons name={"trash-bin"} size={30} />
+                            <Ionicons name={"trash-bin"} size={30} color='coral' />
                         </TouchableOpacity>
                         <TouchableOpacity onPress={onEditCallback} style={styles.editButton}>
-                            <Ionicons name={"build"} size={30} />
+                            <Ionicons name={"build"} size={30} color='coral' />
                         </TouchableOpacity>
                     </View>
                     <View style={styles.listRowTextContainer}>

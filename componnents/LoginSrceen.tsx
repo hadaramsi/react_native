@@ -1,11 +1,5 @@
 import React, { FC, useState } from 'react'
-import {
-    View,
-    Text,
-    TextInput,
-    StyleSheet,
-    TouchableOpacity,
-} from 'react-native'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native'
 import AuthModel from '../model/AuthModel'
 import ClientApi from '../api/ClientApi'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -72,6 +66,7 @@ const LoginScreen: FC<{ route: any, navigation: any, setTokenFunction: any }> = 
             <TouchableOpacity onPress={onRegisterCallback}>
                 <Text style={styles.textRegister}>Not register yet? Click here</Text>
             </TouchableOpacity>
+
 
         </View>
     );

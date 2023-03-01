@@ -8,13 +8,13 @@ import LoginScreen from './componnents/LoginSrceen'
 import RegisterScreen from './componnents/RegisterScreen'
 import PostsList from './componnents/postsList'
 import MyPostsScreen from './componnents/MyPostsScreen'
-import ChatScreen from './screens/ChatScreen'
+import ChatScreen from './componnents/ChatScreen'
 import MyProfileScreen from './componnents/MyProfileScreen'
-import PostAdd from './componnents/PostAdd';
-import apiClient from './api/ClientApi';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import MyPostsList from './componnents/MyPostsScreen';
-import PostEdit from './componnents/PostEdit';
+import PostAdd from './componnents/PostAdd'
+import apiClient from './api/ClientApi'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import MyPostsList from './componnents/MyPostsScreen'
+import PostEdit from './componnents/PostEdit'
 
 const Tab = createBottomTabNavigator()
 
@@ -29,11 +29,11 @@ const PostsStackCp: FC<{ route: any, navigation: any }> = ({ route, navigation }
         headerRight: () => (
           <TouchableOpacity
             onPress={addNewPost}>
-            <Ionicons name={'add-outline'} size={40} color={'gray'} />
+            <Ionicons name={'add-outline'} size={40} color={'tomato'} />
           </TouchableOpacity>
         ),
       }} />
-      <PostsStack.Screen name='PostAdd' component={PostAdd} />
+      <PostsStack.Screen name='Add Post' component={PostAdd} />
     </PostsStack.Navigator>
 
   )
@@ -50,17 +50,17 @@ const MyPostsStackCp: FC<{ route: any, navigation: any }> = ({ route, navigation
           <View style={styles.row}>
             <TouchableOpacity
               onPress={addNewPost}>
-              <Ionicons name={'add-outline'} size={40} color={'gray'} />
+              <Ionicons name={'add-outline'} size={40} color={'tomato'} />
             </TouchableOpacity>
             <TouchableOpacity
               onPress={addNewPost}>
-              <Ionicons name={'power-outline'} size={40} color={'gray'} />
+              <Ionicons name={'power-outline'} size={40} color={'tomato'} />
             </TouchableOpacity>
           </View>
 
         ),
       }} />
-      <MyPostsStack.Screen name='PostEdit' component={PostEdit} />
+      <MyPostsStack.Screen name='Edit Post' component={PostEdit} />
     </MyPostsStack.Navigator>
 
   )
@@ -90,7 +90,7 @@ const App: FC = () => {
     return (
       <NavigationContainer>
         <Stack.Navigator>
-          <Stack.Screen name="LoginScreen">
+          <Stack.Screen name="Login">
             {(props) => (
               <LoginScreen
                 route={props.route}
@@ -99,7 +99,7 @@ const App: FC = () => {
               />
             )}
           </Stack.Screen>
-          <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
+          <Stack.Screen name="Register" component={RegisterScreen} />
         </Stack.Navigator>
 
       </NavigationContainer>
@@ -123,11 +123,11 @@ const App: FC = () => {
         },
         headerRight: () => (
           <TouchableOpacity onPress={logout} style={{ margin: 3 }}>
-            <Ionicons name={"power-outline"} size={40} color={"black"} />
+            <Ionicons name={"power-outline"} size={40} color={"tomato"} />
           </TouchableOpacity>
         ),
         tabBarActiveTintColor: 'tomato',
-        tabBarInactiveTintColor: 'gray',
+        tabBarInactiveTintColor: 'salmon',
       })}>
         <Tab.Screen name="Home" component={PostsStackCp} options={{ headerShown: false }} />
         <Tab.Screen name="My profile" component={MyProfileScreen} />
@@ -153,6 +153,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
   },
 
-});
+})
 
 export default App

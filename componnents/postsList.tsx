@@ -1,9 +1,6 @@
 import React, { FC, useState, useEffect } from 'react'
-import { StatusBar, StyleSheet, Text, View, Image, TouchableOpacity, Button, Alert, TextInput, FlatList, TouchableHighlight } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons'
+import { StatusBar, StyleSheet, Text, View, Image, FlatList, ProgressBarAndroidBase, TouchableHighlight } from 'react-native'
 import PostModel, { Post } from '../model/PostModel'
-import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ListItem: FC<{ name: String, text: String, image: String, userImage: String }> =
     ({ name, text, image, userImage }) => {
@@ -20,6 +17,8 @@ const ListItem: FC<{ name: String, text: String, image: String, userImage: Strin
                         {image == "" && <Image style={styles.listRowImage} source={require('../assets/avatar.png')} />}
                         {image != "" && <Image style={styles.listRowImage} source={{ uri: image.toString() }} />}
                     </View>
+                    {/* <ProgressBarAndroidBase styleAttr="Horizontal" indeterminate={true} progress={0.5} /> */}
+
                 </View>
             </TouchableHighlight>
         )
@@ -72,13 +71,6 @@ const styles = StyleSheet.create({
         elevation: 1,
         borderRadius: 2,
     },
-    button: {
-        position: 'absolute',
-        bottom: -10,
-        left: 10,
-        width: 50,
-        height: 50,
-    },
     listRowPosted: {
         margin: 4,
         flexDirection: "row",
@@ -87,15 +79,16 @@ const styles = StyleSheet.create({
         borderRadius: 2,
     },
     listRowImage: {
-        margin: 10,
-        resizeMode: "contain",
-        height: 130,
-        width: 130,
+        margin: 4,
+        // flex: 1,
+        // resizeMode: "contain",
+        height: 280,
+        width: 390,
     },
     listRowTextContainer: {
         flex: 1,
-        margin: 10,
-        justifyContent: "space-around"
+        margin: 2,
+        // justifyContent: "space-around"
     },
     listRowName: {
         fontSize: 40
@@ -110,10 +103,12 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 20,
         marginTop: 10,
+        fontWeight: 'bold'
     },
     textPost: {
         fontSize: 20,
         margin: 4,
+        // fontWeight: 'bold'
     },
     listRowId: {
         fontSize: 25
